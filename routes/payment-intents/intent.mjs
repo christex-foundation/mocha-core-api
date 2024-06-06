@@ -110,7 +110,7 @@ export async function confirmIntent(id, from_number) {
             return fetchError;
         }
 
-        const requiredFields = ["amount", "amount_received", "currency", "from_number", "to_number"]; // replace with actual required fields
+        const requiredFields = ["amount", "amount_received", "currency", "from_number", "to_number"]; 
         const missingFields = requiredFields.filter(field => !intent[field]);
 
         if (missingFields.length > 0) {
