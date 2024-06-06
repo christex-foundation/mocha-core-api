@@ -4,7 +4,7 @@ import wallet from '../routes/wallet/index.mjs';
 import transfer from '../routes/transfer/index.mjs';
 import convert from '../routes/convert/index.mjs';
 import request from '../routes/request/index.mjs';
-import paymentIntent from '../routes/payment-intents/index.mjs';
+import paymentIntent from '../routes/payment_intent/index.mjs';
 import { showRoutes } from 'hono/dev';
 import { handle } from '@hono/node-server/vercel';
 
