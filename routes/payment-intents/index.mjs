@@ -49,7 +49,7 @@ app.put("/:id", async (c) => {
 
   try {
     const data = await updateIntent(id, from_number, to_number, amount, currency, description, cancelation_reason, payment_method, amount_received);
-    return c.json(data, 201);
+    return c.json(data, 200);
     
   } catch (err) {
     
@@ -71,7 +71,7 @@ app.put("/:id", async (c) => {
 app.get("/", async (c) => {
   try {
     const data = await fetchAllIntents();
-    return c.json(data, 201);
+    return c.json(data, 200);
   } catch (err) {
     console.error("Unexpected error:", err);
     return c.json(
@@ -89,7 +89,7 @@ app.get("/user/:from_number", async (c) => {
   const from_number = c.req.param("from_number");
   try {
     const data = await fetchAllUserIntents(from_number);
-    return c.json(data, 201);
+    return c.json(data, 200);
   } catch (err) {
     console.error("Unexpected error:", err);
     return c.json(
@@ -107,7 +107,7 @@ app.get("/:id", async (c) => {
   const id = c.req.param("id");
   try {
     const data = await fetchIntentById(id);
-    return c.json(data, 201);
+    return c.json(data, 200);
   } catch (err) {
     console.error("Unexpected error:", err);
     return c.json(
@@ -135,7 +135,7 @@ app.put("/:id/confirm", async (c) => {
   }
   try {
     const data = await confirmIntent(id, from_number);
-    return c.json(data, 201);
+    return c.json(data, 200);
   } catch (err) {
     console.error("Unexpected error:", err);
     return c.json(
@@ -153,7 +153,7 @@ app.post("/search", async (c) => {
   const { query } = await c.req.json().catch(() => ({}));
   try {
     const data = await searchIntents(query);
-    return c.json(data, 201);
+    return c.json(data, 200);
   } catch (err) {
     console.error("Unexpected error:", err);
     return c.json(
@@ -171,7 +171,7 @@ app.post("/:id/delete", async (c) => {
   const id = c.req.param("id");
   try {
     const data = await deleteIntent(id);
-    return c.json('Intent deleted!', 201);
+    return c.json('Intent deleted!', 200);
   } catch (err) {
     console.error("Unexpected error:", err);
     return c.json(
