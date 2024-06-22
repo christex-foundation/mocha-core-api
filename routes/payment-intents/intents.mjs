@@ -3,6 +3,10 @@
 
 import * as intentRepository from '../../repo/intents.mjs';
 
+/**
+ * @param {string} from_number
+ * @description Create a payment intent
+ */
 export async function createIntent(from_number) {
   try {
     const data = {
@@ -20,28 +24,27 @@ export async function createIntent(from_number) {
   }
 }
 
-export async function updateIntent(
-  id,
-  from_number,
-  to_number,
-  amount,
-  currency,
-  description,
-  cancelation_reason,
-  payment_method,
-  amount_received,
-) {
+/**
+ * The complete Triforce, or one or more components of the Triforce.
+ * @typedef {Object} Intent
+ * @property {string} from_number
+ * @property {string} to_number
+ * @property {number} amount
+ * @property {string} currency
+ * @property {string} description
+ * @property {string} cancelation_reason
+ * @property {string} payment_method
+ * @property {number} amount_received
+ */
+
+/**
+ * @param {string} id
+ * @param {Intent} data
+ * @description Update a payment intent; fields are nullable
+ */
+export async function updateIntent(id, data) {
+  // TODO: validate data
   try {
-    const data = {
-      from_number: from_number,
-      to_number: to_number,
-      amount: amount,
-      currency: currency,
-      description: description,
-      cancelation_reason: cancelation_reason,
-      payment_method: payment_method,
-      amount_received: amount_received,
-    };
     const { data: result, error } = await intentRepository.updateIntent(id, data);
     if (error) {
       console.log(error);
@@ -53,6 +56,9 @@ export async function updateIntent(
   }
 }
 
+/**
+ * @description Fetch all payment intents
+ */
 export async function fetchAllIntents() {
   try {
     const { data, error } = await intentRepository.fetchAllIntents();
@@ -66,6 +72,10 @@ export async function fetchAllIntents() {
   }
 }
 
+/**
+ * @param {string} from_number
+ * @description Fetch all payment intents for a user
+ */
 export async function fetchAllUserIntents(from_number) {
   try {
     const { data, error } = await intentRepository.fetchAllUserIntents(from_number);
@@ -79,6 +89,10 @@ export async function fetchAllUserIntents(from_number) {
   }
 }
 
+/**
+ * @param {string} id
+ * @description Fetch a payment intent by its ID
+ */
 export async function fetchIntentById(id) {
   try {
     const { data, error } = await intentRepository.fetchIntentById(id);
@@ -92,6 +106,11 @@ export async function fetchIntentById(id) {
   }
 }
 
+/**
+ * @param {string} id
+ * @param {string} from_number
+ * @description Confirm a payment intent
+ */
 export async function confirmIntent(id, from_number) {
   try {
     const { data: intent, error: fetchError } = await intentRepository.fetchIntentById(id);
@@ -123,6 +142,10 @@ export async function confirmIntent(id, from_number) {
   }
 }
 
+/**
+ * @param {string} id
+ * @description Cancel a payment intent
+ */
 export async function cancelIntent(id) {
   try {
     const data = {
@@ -140,6 +163,10 @@ export async function cancelIntent(id) {
   }
 }
 
+/**
+ * @param {string} query
+ * @description Search for payment intents
+ */
 export async function searchIntents(query) {
   try {
     const { data, error } = await intentRepository.searchIntents(query);
@@ -153,6 +180,10 @@ export async function searchIntents(query) {
   }
 }
 
+/**
+ * @param {string} id
+ * @description Delete a payment intent
+ */
 export async function deleteIntent(id) {
   try {
     const { data, error } = await intentRepository.deleteIntent(id);

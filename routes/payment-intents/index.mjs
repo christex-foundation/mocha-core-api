@@ -44,29 +44,10 @@ app.post('/', async (c) => {
 //update payment intent
 app.put('/:id', async (c) => {
   const id = c.req.param('id');
-  const {
-    from_number,
-    to_number,
-    amount,
-    currency,
-    description,
-    cancelation_reason,
-    payment_method,
-    amount_received,
-  } = await c.req.json().catch(() => ({}));
+  const intentData = await c.req.json().catch(() => ({}));
 
   try {
-    const data = await updateIntent(
-      id,
-      from_number,
-      to_number,
-      amount,
-      currency,
-      description,
-      cancelation_reason,
-      payment_method,
-      amount_received,
-    );
+    const data = await updateIntent(id, intentData);
     return c.json(data, 200);
   } catch (err) {
     console.error('Unexpected error:', err);
