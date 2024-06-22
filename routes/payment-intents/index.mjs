@@ -10,7 +10,7 @@ import {
   cancelIntent,
   searchIntents,
   deleteIntent,
-} from '../../repo/intents.mjs';
+} from './intents.mjs';
 const app = new Hono();
 
 //create payment intent
