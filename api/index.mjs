@@ -25,6 +25,4 @@ app.onError((err, c) => {
   return c.text('Custom Error Message', 500);
 });
 
-showRoutes(app);
-
 export default handle(app);

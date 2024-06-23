@@ -113,7 +113,11 @@ export async function fetchIntentById(id) {
  */
 export async function confirmIntent(id, from_number) {
   try {
-    const { data: intent, error: fetchError } = await intentRepository.fetchIntentById(id);
+    const {
+      // @ts-ignore
+      data: [intent],
+      error: fetchError,
+    } = await intentRepository.fetchIntentById(id);
     if (fetchError) {
       console.error('Error fetching intent:', fetchError);
       return fetchError;

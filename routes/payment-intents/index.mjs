@@ -47,7 +47,7 @@ app.post('/:id', async (c) => {
   const intentData = await c.req.json().catch(() => ({}));
 
   try {
-    const data = await updateIntent(id, intentData);
+    const [data] = await updateIntent(id, intentData);
     return c.json(data, 200);
   } catch (err) {
     console.error('Unexpected error:', err);
@@ -115,7 +115,7 @@ app.get('/:id', async (c) => {
 });
 
 //confirm intent
-app.put('/:id/confirm', async (c) => {
+app.post('/:id/confirm', async (c) => {
   const id = c.req.param('id');
   const { from_number } = await c.req.json().catch(() => ({}));
 
