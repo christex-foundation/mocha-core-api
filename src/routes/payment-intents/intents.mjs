@@ -12,8 +12,8 @@ import {
   createDatabaseError,
   createNotFoundError,
   createValidationError,
-} from '../../utils/errors';
-import { validateIntentFields } from '../../utils/intent-validation';
+} from '../../utils/errors.js';
+import { validateIntentFields } from '../../utils/intent-validation.js';
 
 /**
  * Create a payment intent
