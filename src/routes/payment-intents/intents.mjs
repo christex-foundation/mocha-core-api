@@ -220,23 +220,30 @@ export async function confirmIntent(id) {
 }
 
 /**
- * @param {string} id
- * @description Cancel a payment intent
+ * Cancel a payment intent
+ * @param {string} id - The intent ID
+ * @returns {Promise<Object>} The cancelled intent
+ * @throws {Object} DatabaseError if there's an error with the database operation
  */
 export async function cancelIntent(id) {
   try {
+    console.log('Cancelling intent', { id });
     const data = {
       cancelled_at: new Date(),
       cancellation_reason: 'User cancelled',
     };
     const { data: result, error } = await intentRepository.cancelIntent(id, data);
+
     if (error) {
-      console.log(error);
+      console.error('Error cancelling intent', { id, error });
+      throw createDatabaseError('Failed to cancel intent');
     }
+
+    console.log('Intent cancelled successfully', { id });
     return result;
   } catch (err) {
-    console.error('Database error:', err);
-    return err;
+    console.error('Unexpected error in cancelIntent', { id, error: err });
+    throw err;
   }
 }
 

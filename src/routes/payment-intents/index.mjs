@@ -126,6 +126,22 @@ app.post('/:id/confirm', async (c) => {
   }
 });
 
+// Cancel intent
+app.post('/:id/cancel', async (c) => {
+  const id = c.req.param('id');
+
+  try {
+    const data = await cancelIntent(id);
+    return c.json(data, 200);
+  } catch (err) {
+    if (err.name === 'DatabaseError') {
+      return c.json({ message: 'An error occurred while cancelling the intent' }, 500);
+    }
+    console.error('Unexpected error:', err);
+    return c.json({ message: 'An unexpected error occurred' }, 500);
+  }
+});
+
 //search intent
 app.post('/search', async (c) => {
   const { query } = await c.req.json().catch(() => ({}));
