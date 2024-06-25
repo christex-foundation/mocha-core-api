@@ -166,18 +166,17 @@ app.post('/search', async (c) => {
 //delete intent
 app.post('/:id/delete', async (c) => {
   const id = c.req.param('id');
+
   try {
-    const data = await deleteIntent(id);
-    return c.json('Intent deleted!', 200);
+    await deleteIntent(id);
+    return c.json({ message: 'Intent deleted successfully' }, 200);
   } catch (err) {
+    if (err.name === 'DatabaseError') {
+      return c.json({ message: 'An error occurred while deleting the intent' }, 500);
+    }
+
     console.error('Unexpected error:', err);
-    return c.json(
-      {
-        message: 'Unexpected error occurred',
-        error: err.message,
-      },
-      500,
-    );
+    return c.json({ message: 'An unexpected error occurred' }, 500);
   }
 });
 

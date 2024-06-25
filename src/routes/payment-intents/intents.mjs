@@ -276,18 +276,28 @@ export async function searchIntents({ query }) {
 }
 
 /**
- * @param {string} id
- * @description Delete a payment intent
+ * Delete a payment intent
+ * @param {string} id - The intent ID
+ * @returns {Promise<Object>} The result of the delete operation
+ * @throws {Object} NotFoundError if the intent doesn't exist
+ * @throws {Object} DatabaseError if there's an error with the database operation
  */
 export async function deleteIntent(id) {
   try {
+    console.log('Deleting intent', { id });
     const { data, error } = await intentRepository.deleteIntent(id);
+
     if (error) {
-      console.log(error);
+      console.error('Error deleting intent', { id, error });
+      throw createDatabaseError('Failed to delete intent');
     }
+
+    console.log('Intent deleted successfully', { id });
     return data;
   } catch (err) {
-    console.error('Database error:', err);
-    return err;
+    if (err.name !== 'DatabaseError') {
+      console.error('Unexpected error in deleteIntent', { id, error: err });
+    }
+    throw err;
   }
 }
