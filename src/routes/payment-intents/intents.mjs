@@ -3,7 +3,7 @@
 // Intents Service
 import { ZodError } from 'zod';
 import * as intentRepository from '../../repos/intents.mjs';
-import { createIntentSchema } from '../../schemas/intent.mjs';
+import { createIntentSchema, updateIntentSchema } from '../../schemas/intent.mjs';
 import { createDatabaseError, createValidationError } from '../../utils/errors';
 
 /**
@@ -46,34 +46,38 @@ export async function createIntent(data) {
 }
 
 /**
- * The complete Triforce, or one or more components of the Triforce.
- * @typedef {Object} Intent
- * @property {string} from_number
- * @property {string} to_number
- * @property {number} amount
- * @property {string} currency
- * @property {string} description
- * @property {string} cancelation_reason
- * @property {string} payment_method
- * @property {number} amount_received
- */
-
-/**
- * @param {string} id
- * @param {Intent} data
- * @description Update a payment intent; fields are nullable
+ * Update a payment intent
+ * @param {string} id - The intent ID
+ * @param {Object} data - The update data
+ * @returns {Promise<Object>} The updated intent
+ * @throws {Object} ValidationError if the input is invalid
+ * @throws {Object} DatabaseError if there's an error with the database operation
  */
 export async function updateIntent(id, data) {
-  // TODO: validate data
   try {
-    const { data: result, error } = await intentRepository.updateIntent(id, data);
+    const validatedData = updateIntentSchema.parse(data);
+
+    console.log('Updating intent', { id, data: validatedData });
+    const {
+      data: [result],
+      error,
+    } = await intentRepository.updateIntent(id, validatedData);
+
     if (error) {
-      console.log(error);
+      console.error('Error updating intent', { id, error });
+      throw createDatabaseError('Failed to update intent');
     }
+
+    console.log('Intent updated successfully', { id });
     return result;
   } catch (err) {
-    console.error('Database error:', err);
-    return err;
+    if (err instanceof ZodError) {
+      console.warn('Validation error in updateIntent', { id, errors: err.errors });
+      throw createValidationError(err.message);
+    }
+
+    console.error('Unexpected error in updateIntent', { id, error: err });
+    throw err;
   }
 }
 
