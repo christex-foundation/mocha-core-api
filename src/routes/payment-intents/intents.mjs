@@ -105,19 +105,26 @@ export async function fetchAllIntents() {
 }
 
 /**
- * @param {string} from_number
- * @description Fetch all payment intents for a user
+ * Fetch all payment intents for a user
+ * @param {string} from_number - The user's phone number
+ * @returns {Promise<Array<Object>>} User's intents
+ * @throws {Object} DatabaseError if there's an error with the database operation
  */
 export async function fetchAllUserIntents(from_number) {
   try {
+    console.log('Fetching user intents', { from_number });
     const { data, error } = await intentRepository.fetchAllUserIntents(from_number);
+
     if (error) {
-      console.log(error);
+      console.error('Error fetching user intents', { from_number, error });
+      throw createDatabaseError('Failed to fetch user intents');
     }
+
+    console.log('User intents fetched successfully', { from_number, count: data.length });
     return data;
   } catch (err) {
-    console.error('Database error:', err);
-    return err;
+    console.error('Unexpected error in fetchAllUserIntents', { from_number, error: err });
+    throw err;
   }
 }
 

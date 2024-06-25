@@ -70,21 +70,19 @@ app.get('/', async (c) => {
   }
 });
 
-//fetch all user intents
+// Fetch all user intents
 app.get('/user/:from_number', async (c) => {
   const from_number = c.req.param('from_number');
   try {
     const data = await fetchAllUserIntents(from_number);
     return c.json(data, 200);
   } catch (err) {
+    if (err.name === 'DatabaseError') {
+      return c.json({ message: err.message }, 500);
+    }
+
     console.error('Unexpected error:', err);
-    return c.json(
-      {
-        message: 'Unexpected error occurred',
-        error: err.message,
-      },
-      500,
-    );
+    return c.json({ message: 'An unexpected error occurred' }, 500);
   }
 });
 
