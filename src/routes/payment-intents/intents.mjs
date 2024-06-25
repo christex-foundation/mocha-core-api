@@ -129,19 +129,26 @@ export async function fetchAllUserIntents(from_number) {
 }
 
 /**
- * @param {string} id
- * @description Fetch a payment intent by its ID
+ * Fetch a payment intent by its ID
+ * @param {string} id - The intent ID
+ * @returns {Promise<Object>} The intent
+ * @throws {Object} DatabaseError if there's an error with the database operation
  */
 export async function fetchIntentById(id) {
   try {
+    console.log('Fetching intent by ID', { id });
     const { data, error } = await intentRepository.fetchIntentById(id);
+
     if (error) {
-      console.log(error);
+      console.error('Error fetching intent', { id, error });
+      throw createDatabaseError('Failed to fetch intent');
     }
+
+    console.log('Intent fetched successfully', { id });
     return data;
   } catch (err) {
-    console.error('Database error:', err);
-    return err;
+    console.error('Unexpected error in fetchIntentById', { id, error: err });
+    throw err;
   }
 }
 

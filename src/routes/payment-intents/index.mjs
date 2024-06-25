@@ -86,21 +86,18 @@ app.get('/user/:from_number', async (c) => {
   }
 });
 
-//fetch intent by id
+// Fetch intent by id
 app.get('/:id', async (c) => {
   const id = c.req.param('id');
   try {
     const data = await fetchIntentById(id);
     return c.json(data, 200);
   } catch (err) {
+    if (err.name === 'DatabaseError') {
+      return c.json({ message: err.message }, 500);
+    }
     console.error('Unexpected error:', err);
-    return c.json(
-      {
-        message: 'Unexpected error occurred',
-        error: err.message,
-      },
-      500,
-    );
+    return c.json({ message: 'An unexpected error occurred' }, 500);
   }
 });
 
