@@ -1,11 +1,10 @@
 //@ts-check
 import { Hono } from 'hono';
-import wallet from '../routes/wallet/index.mjs';
-import transfer from '../routes/transfer/index.mjs';
-import convert from '../routes/convert/index.mjs';
-import request from '../routes/request/index.mjs';
-import paymentIntent from '../routes/payment-intents/index.mjs';
-import { showRoutes } from 'hono/dev';
+import wallet from '../src/routes/wallet/index.mjs';
+import transfer from '../src/routes/transfer/index.mjs';
+import convert from '../src/routes/convert/index.mjs';
+import request from '../src/routes/request/index.mjs';
+import paymentIntent from '../src/routes/payment-intents/index.mjs';
 import { handle } from '@hono/node-server/vercel';
 
 const app = new Hono().basePath('/api');

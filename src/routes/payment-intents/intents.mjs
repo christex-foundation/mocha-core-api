@@ -1,7 +1,7 @@
 //@ts-check
 // Intents Service
 
-import * as intentRepository from '../../repo/intents.mjs';
+import * as intentRepository from '../../repos/intents.mjs';
 
 /**
  * @param {string} from_number
