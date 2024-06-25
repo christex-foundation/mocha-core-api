@@ -1,26 +1,47 @@
 //@ts-check
-// Intents Service
 
+// Intents Service
+import { ZodError } from 'zod';
 import * as intentRepository from '../../repos/intents.mjs';
+import { createIntentSchema } from '../../schemas/intent.mjs';
+import { createDatabaseError, createValidationError } from '../../utils/errors';
 
 /**
- * @param {string} from_number
- * @description Create a payment intent
+ * Create a payment intent
+ * @param {Object} data - The intent data
+ * @param {string} data.from_number - The from number
+ * @returns {Promise<Object>} The created intent
+ * @throws {Object} ValidationError if the input is invalid
+ * @throws {Object} DatabaseError if there's an error with the database operation
  */
-export async function createIntent(from_number) {
+export async function createIntent(data) {
   try {
-    const data = {
-      from_number: from_number,
-      client_secret: `client_secret_${from_number}`,
+    const validatedData = createIntentSchema.parse(data);
+    const intentData = {
+      ...validatedData,
+      client_secret: `client_secret_${validatedData.from_number}`,
     };
-    const { data: result, error } = await intentRepository.createIntent(data);
+
+    console.log('Creating new intent', { data: intentData });
+    const {
+      data: [result],
+      error,
+    } = await intentRepository.createIntent(intentData);
+
     if (error) {
-      console.log(error);
+      console.error('Error creating intent', { error });
+      throw createDatabaseError('Failed to create intent');
     }
+
+    console.log('Intent created successfully', { id: result.id });
     return result;
   } catch (err) {
-    console.error('Database error:', err);
-    return err;
+    if (err instanceof ZodError) {
+      console.warn('Validation error in createIntent', { errors: err.errors });
+      throw createValidationError(err.message);
+    }
+    console.error('Unexpected error in createIntent', { error: err });
+    throw err;
   }
 }
 
