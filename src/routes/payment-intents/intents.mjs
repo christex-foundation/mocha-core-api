@@ -4,7 +4,12 @@
 import { ZodError } from 'zod';
 import * as intentRepository from '../../repos/intents.mjs';
 import { createIntentSchema, updateIntentSchema } from '../../schemas/intent.mjs';
-import { createDatabaseError, createValidationError } from '../../utils/errors';
+import {
+  createDatabaseError,
+  createNotFoundError,
+  createValidationError,
+} from '../../utils/errors';
+import { validateIntentFields } from '../../utils/intent-validation';
 
 /**
  * Create a payment intent
@@ -153,42 +158,64 @@ export async function fetchIntentById(id) {
 }
 
 /**
- * @param {string} id
- * @param {string} from_number
- * @description Confirm a payment intent
+ * Confirm a payment intent
+ * @param {string} id - The intent ID
+ * @returns {Promise<Object>} The confirmed intent
+ * @throws {Object} ValidationError if the intent is not ready to be confirmed
+ * @throws {Object} DatabaseError if there's an error with the database operation
  */
-export async function confirmIntent(id, from_number) {
+export async function confirmIntent(id) {
   try {
+    console.log('Fetching intent for confirmation', { id });
     const {
-      // @ts-ignore
       data: [intent],
       error: fetchError,
     } = await intentRepository.fetchIntentById(id);
+
     if (fetchError) {
       console.error('Error fetching intent:', fetchError);
-      return fetchError;
+      throw createDatabaseError('Failed to fetch intent for confirmation');
     }
 
-    const requiredFields = ['amount', 'amount_received', 'currency', 'from_number', 'to_number'];
-    const missingFields = requiredFields.filter((field) => !intent[field]);
-
-    if (missingFields.length > 0) {
-      const errorMessage = `Missing required fields: ${missingFields.join(', ')}`;
-      console.error(errorMessage);
-      return { error: errorMessage };
+    if (!intent) {
+      console.warn('Intent not found for confirmation', { id });
+      throw createNotFoundError(`Intent with id ${id} not found`);
     }
 
-    const data = { confirmed_at: new Date() };
+    const validationError = validateIntentFields(intent, [
+      'amount',
+      'amount_received',
+      'currency',
+      'from_number',
+      'to_number',
+    ]);
 
-    const { data: result, error } = await intentRepository.confirmIntent(id, from_number, data);
+    if (validationError) {
+      console.error('Intent validation failed:', validationError);
+      throw createValidationError(`Intent is not ready to be confirmed. ${validationError}`);
+    }
+
+    console.log('Confirming intent', { id });
+    const { data: result, error } = await intentRepository.confirmIntent(id, {
+      confirmed_at: new Date(),
+    });
+
     if (error) {
-      console.error('Error updating intent:', error);
-      return error;
+      console.error('Error confirming intent', { id, error });
+      throw createDatabaseError('Failed to confirm intent');
     }
+
+    console.log('Intent confirmed successfully', { id });
     return result;
   } catch (err) {
-    console.error('Database error:', err);
-    return err;
+    if (
+      err.name !== 'ValidationError' &&
+      err.name !== 'NotFoundError' &&
+      err.name !== 'DatabaseError'
+    ) {
+      console.error('Unexpected error in confirmIntent', { id, error: err });
+    }
+    throw err;
   }
 }
 

@@ -104,28 +104,25 @@ app.get('/:id', async (c) => {
 //confirm intent
 app.post('/:id/confirm', async (c) => {
   const id = c.req.param('id');
-  const { from_number } = await c.req.json().catch(() => ({}));
 
-  if (!from_number) {
-    return c.json(
-      {
-        message: 'Invalid request; missing `from_number`',
-      },
-      400,
-    );
-  }
   try {
-    const data = await confirmIntent(id, from_number);
+    const data = await confirmIntent(id);
     return c.json(data, 200);
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      return c.json({ message: err.message }, 400);
+    }
+
+    if (err.name === 'NotFoundError') {
+      return c.json({ message: err.message }, 404);
+    }
+
+    if (err.name === 'DatabaseError') {
+      return c.json({ message: err.message }, 500);
+    }
+
     console.error('Unexpected error:', err);
-    return c.json(
-      {
-        message: 'Unexpected error occurred',
-        error: err.message,
-      },
-      500,
-    );
+    return c.json({ message: 'An unexpected error occurred' }, 500);
   }
 });
 

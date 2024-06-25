@@ -24,13 +24,8 @@ export async function fetchIntentById(id) {
   return await supabase.from('intents').select().eq('id', id);
 }
 
-export async function confirmIntent(id, from_number, data) {
-  return await supabase
-    .from('intents')
-    .update(data)
-    .eq('id', id)
-    .eq('client_secret', `client_secret_${from_number}`)
-    .select();
+export async function confirmIntent(id, data) {
+  return await supabase.from('intents').update(data).eq('id', id).select();
 }
 
 export async function cancelIntent(id, data) {
