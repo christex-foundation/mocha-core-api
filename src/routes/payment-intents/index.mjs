@@ -55,20 +55,18 @@ app.post('/:id', async (c) => {
   }
 });
 
-//fetch all intents
+// Fetch all intents
 app.get('/', async (c) => {
   try {
     const data = await fetchAllIntents();
     return c.json(data, 200);
   } catch (err) {
+    if (err.name === 'DatabaseError') {
+      return c.json({ message: err.message }, 500);
+    }
+
     console.error('Unexpected error:', err);
-    return c.json(
-      {
-        message: 'Unexpected error occurred',
-        error: err.message,
-      },
-      500,
-    );
+    return c.json({ message: 'An unexpected error occurred' }, 500);
   }
 });
 

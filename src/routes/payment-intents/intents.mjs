@@ -82,18 +82,25 @@ export async function updateIntent(id, data) {
 }
 
 /**
- * @description Fetch all payment intents
+ * Fetch all payment intents
+ * @returns {Promise<Array<Object>>} All intents
+ * @throws {Object} DatabaseError if there's an error with the database operation
  */
 export async function fetchAllIntents() {
   try {
+    console.log('Fetching all intents');
     const { data, error } = await intentRepository.fetchAllIntents();
+
     if (error) {
-      console.log(error);
+      console.error('Error fetching all intents', { error });
+      throw createDatabaseError('Failed to fetch all intents');
     }
+
+    console.log('All intents fetched successfully', { count: data.length });
     return data;
   } catch (err) {
-    console.error('Database error:', err);
-    return err;
+    console.error('Unexpected error in fetchAllIntents', { error: err });
+    throw err;
   }
 }
 
