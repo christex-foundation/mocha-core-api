@@ -144,19 +144,22 @@ app.post('/:id/cancel', async (c) => {
 
 //search intent
 app.post('/search', async (c) => {
-  const { query } = await c.req.json().catch(() => ({}));
+  const body = await c.req.json().catch(() => ({}));
+
   try {
-    const data = await searchIntents(query);
+    const data = await searchIntents(body);
     return c.json(data, 200);
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      return c.json({ message: err.message }, 400);
+    }
+
+    if (err.name === 'DatabaseError') {
+      return c.json({ message: err.message }, 500);
+    }
+
     console.error('Unexpected error:', err);
-    return c.json(
-      {
-        message: 'Unexpected error occurred',
-        error: err.message,
-      },
-      500,
-    );
+    return c.json({ message: 'An unexpected error occurred' }, 500);
   }
 });
 

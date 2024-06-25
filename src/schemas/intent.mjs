@@ -14,3 +14,7 @@ export const updateIntentSchema = z.object({
   payment_method: z.string().optional(),
   amount_received: z.number().optional(),
 });
+
+export const searchIntentSchema = z.object({
+  query: z.string().min(1, 'Search query cannot be empty'),
+});

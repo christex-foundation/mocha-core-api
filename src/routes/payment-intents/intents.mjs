@@ -3,7 +3,11 @@
 // Intents Service
 import { ZodError } from 'zod';
 import * as intentRepository from '../../repos/intents.mjs';
-import { createIntentSchema, updateIntentSchema } from '../../schemas/intent.mjs';
+import {
+  createIntentSchema,
+  searchIntentSchema,
+  updateIntentSchema,
+} from '../../schemas/intent.mjs';
 import {
   createDatabaseError,
   createNotFoundError,
@@ -248,19 +252,26 @@ export async function cancelIntent(id) {
 }
 
 /**
- * @param {string} query
+ * @param {object} body
  * @description Search for payment intents
  */
-export async function searchIntents(query) {
+export async function searchIntents({ query }) {
   try {
-    const { data, error } = await intentRepository.searchIntents(query);
+    const validatedData = searchIntentSchema.parse({ query });
+    console.log('Searching intents', { query });
+
+    const { data, error } = await intentRepository.searchIntents(validatedData.query);
+
     if (error) {
-      console.log(error);
+      console.error('Error searching intents', { query, error });
+      throw createDatabaseError('Failed to search intents');
     }
+
+    console.log('Intents search completed', { query, count: data.length });
     return data;
   } catch (err) {
-    console.error('Database error:', err);
-    return err;
+    console.error('Unexpected error in searchIntents', { query, error: err });
+    throw err;
   }
 }
 
