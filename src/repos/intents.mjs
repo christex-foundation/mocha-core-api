@@ -1,7 +1,7 @@
 //@ts-check
 // Intents Repository
-
 import { createSupabaseClient } from '../utils/supabase.mjs';
+
 const supabase = createSupabaseClient();
 
 export async function createIntent(data) {
@@ -25,11 +25,11 @@ export async function fetchIntentById(id) {
 }
 
 export async function confirmIntent(id, data) {
-  return await supabase.from('intents').update(data).eq('id', id).select();
+  return await updateIntent(id, data);
 }
 
 export async function cancelIntent(id, data) {
-  return await supabase.from('intents').update(data).eq('id', id);
+  return await updateIntent(id, data);
 }
 
 export async function searchIntents(query) {
