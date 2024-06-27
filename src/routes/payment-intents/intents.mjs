@@ -64,6 +64,19 @@ export async function createIntent(data) {
  */
 export async function updateIntent(id, data) {
   try {
+    console.log('Fetching intent for update', { id });
+    const { data: intent, error: fetchError } = await intentRepository.fetchIntentById(id);
+
+    if (fetchError) {
+      console.error('Error fetching intent:', fetchError);
+      throw createDatabaseError('Failed to fetch intent for update');
+    }
+
+    if (intent.length === 0) {
+      console.warn('Intent not found for update', { id });
+      throw createNotFoundError(`Intent with id ${id} not found`);
+    }
+
     const parsedData = updateIntentSchema.parse(data);
 
     console.log('Updating intent', { id, data: parsedData });
