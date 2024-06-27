@@ -8,7 +8,8 @@
     "test:spl-transfer": "node scripts/transfer.mjs",
     "test:create-wallet": "node scripts/wallet.mjs",
     "start": "NODEJS_HELPERS=0 vercel dev",
-    "deploy": "vercel"
+    "deploy": "vercel",
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest"
   },
   "keywords": [],
   "author": "Colin Ogoo",
@@ -17,10 +18,14 @@
     "@hono/node-server": "^1.9.0",
     "@solana/spl-token": "^0.4.1",
     "@solana/web3.js": "^1.91.1",
+    "@supabase/supabase-js": "^2.43.4",
     "bignumber.js": "^9.1.2",
-    "hono": "^4.1.2"
+    "hono": "^4.1.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
     "vercel": "^32.7.2"
   }
 }
