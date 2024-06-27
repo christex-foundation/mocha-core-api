@@ -17,6 +17,7 @@ import {
   validateCancellationIntent,
   validateConfirmationIntent,
   validateDeleteIntent,
+  validateUpdateIntent,
 } from '../../utils/validation.js';
 
 /**
@@ -79,6 +80,14 @@ export async function updateIntent(id, data) {
     if (fetchedIntent.length === 0) {
       console.warn('Intent not found for update', { id });
       throw createNotFoundError(`Intent with id ${id} not found`);
+    }
+
+    // validate fields to confirm intent
+    const validationError = validateUpdateIntent(fetchedIntent);
+
+    if (validationError) {
+      console.error('Intent validation failed:', validationError);
+      throw createValidationError(`Intent cannot be updated. ${validationError}`);
     }
 
     const parsedData = updateIntentSchema.parse(data);

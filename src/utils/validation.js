@@ -56,3 +56,22 @@ export function validateDeleteIntent([intent]) {
 
   return null;
 }
+
+/**
+ * Validates fields for updating an intent
+ *
+ * @param {Array} intent - The intent object to validate
+ * @returns {string|null} Error message if validation fails, null otherwise
+ *
+ */
+export function validateUpdateIntent([intent]) {
+  if (intent.confirmed_at) {
+    return 'Intent object is already confirmed';
+  }
+
+  if (intent.cancelled_at) {
+    return 'Intent object is already cancelled';
+  }
+
+  return null;
+}

@@ -1,6 +1,5 @@
 //@ts-check
 import { jest } from '@jest/globals';
-import { createValidationError } from '../src/utils/errors';
 
 // Mock the repository
 jest.unstable_mockModule('../src/repos/intents.mjs', () => ({
@@ -85,6 +84,19 @@ describe('Intents Service', () => {
       intentRepository.fetchIntentById.mockResolvedValue({ data: [{ id: mockId }], error: null });
 
       await expect(intentService.updateIntent(mockId, mockData)).rejects.toThrow();
+    });
+
+    it('should throw ValidationError when intent cannot be updated', async () => {
+      const mockId = 'intent_123';
+      const mockData = { amount: 1000 };
+      intentRepository.fetchIntentById.mockResolvedValue({
+        data: [{ id: mockId, cancelled_at: new Date() }],
+        error: null,
+      });
+
+      await expect(intentService.updateIntent(mockId, mockData)).rejects.toThrow(
+        'Intent cannot be updated',
+      );
     });
   });
 
