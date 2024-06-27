@@ -13,7 +13,11 @@ import {
   createNotFoundError,
   createValidationError,
 } from '../../utils/errors.js';
-import { validateIntentFields } from '../../utils/intent-validation.js';
+import {
+  validateCancellationIntent,
+  validateConfirmationIntent,
+  validateDeleteIntent,
+} from '../../utils/validation.js';
 
 /**
  * Create a payment intent
@@ -65,14 +69,14 @@ export async function createIntent(data) {
 export async function updateIntent(id, data) {
   try {
     console.log('Fetching intent for update', { id });
-    const { data: intent, error: fetchError } = await intentRepository.fetchIntentById(id);
+    const { data: fetchedIntent, error: fetchError } = await intentRepository.fetchIntentById(id);
 
     if (fetchError) {
       console.error('Error fetching intent:', fetchError);
       throw createDatabaseError('Failed to fetch intent for update');
     }
 
-    if (intent.length === 0) {
+    if (fetchedIntent.length === 0) {
       console.warn('Intent not found for update', { id });
       throw createNotFoundError(`Intent with id ${id} not found`);
     }
@@ -80,7 +84,7 @@ export async function updateIntent(id, data) {
     const parsedData = updateIntentSchema.parse(data);
 
     console.log('Updating intent', { id, data: parsedData });
-    const { data: responseData, error } = await intentRepository.updateIntent(id, parsedData);
+    const { data: updatedData, error } = await intentRepository.updateIntent(id, parsedData);
 
     if (error) {
       console.error('Error updating intent', { id, error });
@@ -88,7 +92,7 @@ export async function updateIntent(id, data) {
     }
 
     console.log('Intent updated successfully', { id });
-    const [result] = responseData;
+    const [result] = updatedData;
     return result;
   } catch (err) {
     if (err instanceof ZodError) {
@@ -165,7 +169,9 @@ export async function fetchIntentById(id) {
     }
 
     console.log('Intent fetched successfully', { id });
-    return data;
+    const [intent] = data;
+
+    return intent;
   } catch (err) {
     console.error('Unexpected error in fetchIntentById', { id, error: err });
     throw err;
@@ -182,25 +188,20 @@ export async function fetchIntentById(id) {
 export async function confirmIntent(id) {
   try {
     console.log('Fetching intent for confirmation', { id });
-    const { data: intent, error: fetchError } = await intentRepository.fetchIntentById(id);
+    const { data: fetchedIntent, error: fetchError } = await intentRepository.fetchIntentById(id);
 
     if (fetchError) {
       console.error('Error fetching intent:', fetchError);
       throw createDatabaseError('Failed to fetch intent for confirmation');
     }
 
-    if (intent.length === 0) {
+    if (fetchedIntent && fetchedIntent.length === 0) {
       console.warn('Intent not found for confirmation', { id });
       throw createNotFoundError(`Intent with id ${id} not found`);
     }
 
-    const validationError = validateIntentFields(intent, [
-      'amount',
-      'amount_received',
-      'currency',
-      'from_number',
-      'to_number',
-    ]);
+    // validate fields to confirm intent
+    const validationError = validateConfirmationIntent(fetchedIntent);
 
     if (validationError) {
       console.error('Intent validation failed:', validationError);
@@ -208,7 +209,7 @@ export async function confirmIntent(id) {
     }
 
     console.log('Confirming intent', { id });
-    const { data: result, error } = await intentRepository.confirmIntent(id, {
+    const { data: confirmedData, error } = await intentRepository.confirmIntent(id, {
       confirmed_at: new Date(),
     });
 
@@ -218,6 +219,8 @@ export async function confirmIntent(id) {
     }
 
     console.log('Intent confirmed successfully', { id });
+
+    const [result] = confirmedData;
     return result;
   } catch (err) {
     if (
@@ -239,6 +242,26 @@ export async function confirmIntent(id) {
  */
 export async function cancelIntent(id) {
   try {
+    console.log('Fetching intent for cancellation', { id });
+    const { data: intent, error: fetchError } = await intentRepository.fetchIntentById(id);
+
+    if (fetchError) {
+      console.error('Error fetching intent:', fetchError);
+      throw createDatabaseError('Failed to fetch intent for cancellation');
+    }
+
+    if (intent.length === 0) {
+      console.warn('Intent not found for cancellation', { id });
+      throw createNotFoundError(`Intent with id ${id} not found`);
+    }
+
+    const validationError = validateCancellationIntent(intent);
+
+    if (validationError) {
+      console.error('Intent validation failed:', validationError);
+      throw createValidationError(`Intent is not ready to be cancelled. ${validationError}`);
+    }
+
     console.log('Cancelling intent', { id });
     const data = {
       cancelled_at: new Date(),
@@ -292,6 +315,26 @@ export async function searchIntents({ query }) {
  */
 export async function deleteIntent(id) {
   try {
+    console.log('Fetching intent to delete', { id });
+    const { data: intent, error: fetchError } = await intentRepository.fetchIntentById(id);
+
+    if (fetchError) {
+      console.error('Error fetching intent:', fetchError);
+      throw createDatabaseError('Failed to fetch intent to delete');
+    }
+
+    if (intent.length === 0) {
+      console.warn('Intent not found to delete', { id });
+      throw createNotFoundError(`Intent with id ${id} not found`);
+    }
+
+    const validationError = validateDeleteIntent(intent);
+
+    if (validationError) {
+      console.error('Intent validation failed:', validationError);
+      throw createValidationError(`Intent is not ready to be deleted. ${validationError}`);
+    }
+
     console.log('Deleting intent', { id });
     const { data, error } = await intentRepository.deleteIntent(id);
 
