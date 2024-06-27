@@ -1,17 +1,13 @@
 //@ts-check
+
 /**
  * Validates required fields for confirming an intent
  * @param {Array} intent - The intent object to validate
  * @returns {string|null} Error message if validation fails, null otherwise
  */
 export function validateConfirmationIntent([intent]) {
-  if (intent.confirmed_at) {
-    return 'Intent object is already confirmed';
-  }
-
-  if (intent.cancelled_at) {
-    return 'Intent object is already cancelled';
-  }
+  const baseValidation = validateBaseIntent(intent);
+  if (baseValidation) return baseValidation;
 
   const requiredFields = ['amount', 'amount_received', 'currency', 'from_number', 'to_number'];
   const missingFields = requiredFields.filter((field) => !intent[field]);
@@ -29,15 +25,7 @@ export function validateConfirmationIntent([intent]) {
  * @returns {string|null} Error message if validation fails, null otherwise
  */
 export function validateCancellationIntent([intent]) {
-  if (intent.confirmed_at) {
-    return 'Intent object is already confirmed';
-  }
-
-  if (intent.cancelled_at) {
-    return 'Intent object is already cancelled';
-  }
-
-  return null;
+  return validateBaseIntent(intent);
 }
 
 /**
@@ -46,15 +34,7 @@ export function validateCancellationIntent([intent]) {
  * @returns {string|null} Error message if validation fails, null otherwise
  */
 export function validateDeleteIntent([intent]) {
-  if (intent.confirmed_at) {
-    return 'Intent object is already confirmed';
-  }
-
-  if (intent.cancelled_at) {
-    return 'Intent object is already cancelled';
-  }
-
-  return null;
+  return validateBaseIntent(intent);
 }
 
 /**
@@ -65,6 +45,15 @@ export function validateDeleteIntent([intent]) {
  *
  */
 export function validateUpdateIntent([intent]) {
+  return validateBaseIntent(intent);
+}
+
+/**
+ * Validates the base conditions for an intent
+ * @param {Object} intent - The intent object to validate
+ * @returns {string|null} Error message if validation fails, null otherwise
+ */
+function validateBaseIntent(intent) {
   if (intent.confirmed_at) {
     return 'Intent object is already confirmed';
   }
