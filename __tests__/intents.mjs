@@ -1,5 +1,6 @@
 //@ts-check
 import { jest } from '@jest/globals';
+import { object } from 'zod';
 
 // Mock the repository
 jest.unstable_mockModule('../src/repos/intents.mjs', () => ({
@@ -34,7 +35,7 @@ describe('Intents Service', () => {
 
   describe('createIntent', () => {
     it('should create an intent successfully', async () => {
-      const mockData = { from_number: '1234567890' };
+      const mockData = { from_number: '1234567890', object: 'transfer_intent' };
       const mockResult = { id: 'intent_123', ...mockData };
       intentRepository.createIntent.mockResolvedValue({ data: [mockResult], error: null });
 
@@ -49,7 +50,7 @@ describe('Intents Service', () => {
     });
 
     it('should throw DatabaseError when repository fails', async () => {
-      const mockData = { from_number: '1234567890' };
+      const mockData = { from_number: '1234567890', object: 'transfer_intent' };
       intentRepository.createIntent.mockResolvedValue({ data: null, error: new Error('DB Error') });
 
       await expect(intentService.createIntent(mockData)).rejects.toThrow('Failed to create intent');

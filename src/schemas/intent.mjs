@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const createIntentSchema = z.object({
   from_number: z.string(),
+  object: z.string(),
 });
 
 export const updateIntentSchema = z.object({
