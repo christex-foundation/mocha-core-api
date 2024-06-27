@@ -16,7 +16,7 @@ import { errorHandler } from '../../middleware/error-handler.mjs';
 const app = new Hono();
 app.onError(errorHandler);
 
-//create payment intent
+//create intent
 app.post('/', async (c) => {
   const body = await c.req.json().catch(() => ({}));
 
@@ -24,7 +24,7 @@ app.post('/', async (c) => {
   return c.json(data, 201);
 });
 
-//update payment intent
+//update intent
 // should be app.put but limitation on twilio studio
 app.post('/:id', async (c) => {
   const id = c.req.param('id');

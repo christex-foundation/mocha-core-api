@@ -24,7 +24,7 @@ describe('Intents Service', () => {
   let intentRepository;
 
   beforeAll(async () => {
-    intentService = await import('../src/routes/payment-intents/intents.mjs');
+    intentService = await import('../src/routes/intents/intents.mjs');
     intentRepository = await import('../src/repos/intents.mjs');
   });
 

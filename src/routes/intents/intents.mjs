@@ -21,7 +21,7 @@ import {
 } from '../../utils/validation.js';
 
 /**
- * Create a payment intent
+ * Create an intent
  * @param {Object} data - The intent data
  * @param {string} data.from_number - The from number
  * @returns {Promise<Object>} The created intent
@@ -60,7 +60,7 @@ export async function createIntent(data) {
 }
 
 /**
- * Update a payment intent
+ * Update an intent
  * @param {string} id - The intent ID
  * @param {Object} data - The update data
  * @returns {Promise<Object>} The updated intent
@@ -115,7 +115,7 @@ export async function updateIntent(id, data) {
 }
 
 /**
- * Fetch all payment intents
+ * Fetch all intents
  * @returns {Promise<Array<Object>>} All intents
  * @throws {Object} DatabaseError if there's an error with the database operation
  */
@@ -138,7 +138,7 @@ export async function fetchAllIntents() {
 }
 
 /**
- * Fetch all payment intents for a user
+ * Fetch all intents for a user
  * @param {string} from_number - The user's phone number
  * @returns {Promise<Array<Object>>} User's intents
  * @throws {Object} DatabaseError if there's an error with the database operation
@@ -162,7 +162,7 @@ export async function fetchAllUserIntents(from_number) {
 }
 
 /**
- * Fetch a payment intent by its ID
+ * Fetch an intent by its ID
  * @param {string} id - The intent ID
  * @returns {Promise<Object>} The intent
  * @throws {Object} DatabaseError if there's an error with the database operation
@@ -188,7 +188,7 @@ export async function fetchIntentById(id) {
 }
 
 /**
- * Confirm a payment intent
+ * Confirm an intent
  * @param {string} id - The intent ID
  * @returns {Promise<Object>} The confirmed intent
  * @throws {Object} ValidationError if the intent is not ready to be confirmed
@@ -244,7 +244,7 @@ export async function confirmIntent(id) {
 }
 
 /**
- * Cancel a payment intent
+ * Cancel an intent
  * @param {string} id - The intent ID
  * @returns {Promise<Object>} The cancelled intent
  * @throws {Object} DatabaseError if there's an error with the database operation
@@ -293,7 +293,7 @@ export async function cancelIntent(id) {
 
 /**
  * @param {object} body
- * @description Search for payment intents
+ * @description Search for intents
  */
 export async function searchIntents({ query }) {
   try {
@@ -316,7 +316,7 @@ export async function searchIntents({ query }) {
 }
 
 /**
- * Delete a payment intent
+ * Delete an intent
  * @param {string} id - The intent ID
  * @returns {Promise<Object>} The result of the delete operation
  * @throws {Object} NotFoundError if the intent doesn't exist
