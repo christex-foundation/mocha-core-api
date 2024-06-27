@@ -14,6 +14,7 @@ export const updateIntentSchema = z.object({
   cancelation_reason: z.string().optional(),
   payment_method: z.string().optional(),
   amount_received: z.number().optional(),
+  transaction_id: z.string().optional(),
 });
 
 export const searchIntentSchema = z.object({

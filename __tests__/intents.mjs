@@ -70,6 +70,18 @@ describe('Intents Service', () => {
       expect(intentRepository.updateIntent).toHaveBeenCalledWith(mockId, mockData);
     });
 
+    it('should update an intent with transaction details successfully', async () => {
+      const mockId = 'intent_123';
+      const mockData = { amount: 1000, amount_received: 1000, transaction_id: 'txn_123' };
+      const mockResult = { id: mockId, ...mockData };
+      intentRepository.fetchIntentById.mockResolvedValue({ data: [{ id: mockId }], error: null });
+      intentRepository.updateIntent.mockResolvedValue({ data: [mockResult], error: null });
+
+      const result = await intentService.updateIntent(mockId, mockData);
+      expect(result).toEqual(mockResult);
+      expect(intentRepository.updateIntent).toHaveBeenCalledWith(mockId, mockData);
+    });
+
     it('should throw NotFoundError when intent does not exist', async () => {
       const mockId = 'non_existent_id';
       intentRepository.fetchIntentById.mockResolvedValue({ data: [], error: null });
