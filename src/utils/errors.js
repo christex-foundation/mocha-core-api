@@ -3,29 +3,32 @@
 /**
  * Create a validation error
  * @param {string} message - The error message
- * @returns {Object} A validation error object
+ * @returns {Error} A validation error object
  */
-export const createValidationError = (message) => ({
-  name: 'ValidationError',
-  message,
-});
+export function createValidationError(message) {
+  const error = new Error(message);
+  error.name = 'ValidationError';
+  return error;
+}
 
 /**
  * Create a database error
  * @param {string} message - The error message
- * @returns {Object} A database error object
+ * @returns {Error} A database error object
  */
-export const createDatabaseError = (message) => ({
-  name: 'DatabaseError',
-  message,
-});
+export function createDatabaseError(message) {
+  const error = new Error(message);
+  error.name = 'DatabaseError';
+  return error;
+}
 
 /**
  * Create a not found error
  * @param {string} message - The error message
- * @returns {Object} A not found error object
+ * @returns {Error} A not found error object
  */
-export const createNotFoundError = (message) => ({
-  name: 'NotFoundError',
-  message,
-});
+export function createNotFoundError(message) {
+  const error = new Error(message);
+  error.name = 'NotFoundError';
+  return error;
+}
