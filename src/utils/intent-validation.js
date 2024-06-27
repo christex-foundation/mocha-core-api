@@ -5,6 +5,14 @@
  * @returns {string|null} Error message if validation fails, null otherwise
  */
 export function validateIntentFields(intent, requiredFields) {
+  if (intent.confirmed_at) {
+    return 'Intent object is already confirmed';
+  }
+
+  if (intent.cancelled_at) {
+    return 'Intent object is already cancelled';
+  }
+
   const missingFields = requiredFields.filter((field) => !intent[field]);
 
   if (missingFields.length > 0) {
