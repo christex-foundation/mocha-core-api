@@ -70,6 +70,19 @@ describe('Intents Service', () => {
       expect(intentRepository.updateIntent).toHaveBeenCalledWith(mockId, mockData);
     });
 
+    it('should update an intent successfully by coercing a string amount', async () => {
+      const mockId = 'intent_123';
+      const mockData = { amount: '1,000' };
+      const parsedMockData = { amount: 1000 };
+      const mockResult = { id: mockId, ...parsedMockData };
+      intentRepository.fetchIntentById.mockResolvedValue({ data: [{ id: mockId }], error: null });
+      intentRepository.updateIntent.mockResolvedValue({ data: [mockResult], error: null });
+
+      const result = await intentService.updateIntent(mockId, mockData);
+      expect(result).toEqual(mockResult);
+      expect(intentRepository.updateIntent).toHaveBeenCalledWith(mockId, parsedMockData);
+    });
+
     it('should update an intent with transaction details successfully', async () => {
       const mockId = 'intent_123';
       const mockData = { amount: 1000, amount_received: 1000, transaction_id: 'txn_123' };

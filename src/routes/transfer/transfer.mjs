@@ -13,7 +13,7 @@ export async function transfer(fromNumber, toNumber, amount) {
   // TODO: validate numbers
   // https://twilio.com/docs/lookup/quickstart
   //https://www.twilio.com/docs/glossary/what-e164
-  console.log(`Transferrring USDC`);
+  console.log(`Transferrring USDC`, amount);
   // call transfer
   return transferUSDC(fromNumber, toNumber, amount);
 }
