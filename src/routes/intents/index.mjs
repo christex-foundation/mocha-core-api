@@ -67,8 +67,9 @@ app.post('/:id/confirm', async (c) => {
 // Cancel intent
 app.post('/:id/cancel', async (c) => {
   const id = c.req.param('id');
+  const body = await c.req.json().catch(() => ({}));
 
-  const data = await cancelIntent(id);
+  const data = await cancelIntent(id, body);
   return c.json(data, 200);
 });
 

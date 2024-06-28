@@ -227,17 +227,26 @@ describe('Intents Service', () => {
     it('should cancel an intent successfully', async () => {
       const mockId = 'intent_123';
       const mockIntent = { id: mockId };
+      const mockData = { cancellation_reason: 'Test reason' };
       const cancelledIntent = {
         ...mockIntent,
-        status: 'cancelled',
+        ...mockData,
         cancelled_at: expect.any(Date),
       };
       intentRepository.fetchIntentById.mockResolvedValue({ data: [mockIntent], error: null });
       intentRepository.cancelIntent.mockResolvedValue({ data: [cancelledIntent], error: null });
 
-      const result = await intentService.cancelIntent(mockId);
+      const result = await intentService.cancelIntent(mockId, mockData);
       expect(result).toEqual([cancelledIntent]);
       expect(intentRepository.cancelIntent).toHaveBeenCalledWith(mockId, expect.any(Object));
+    });
+
+    it('should throw ValidationError for missing cancellation reason', async () => {
+      const mockId = 'intent_123';
+      const mockIntent = { id: mockId };
+      intentRepository.fetchIntentById.mockResolvedValue({ data: [mockIntent], error: null });
+
+      await expect(intentService.cancelIntent(mockId)).rejects.toThrow();
     });
 
     it('should throw NotFoundError when intent does not exist', async () => {

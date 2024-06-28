@@ -11,7 +11,7 @@ export const updateIntentSchema = z.object({
   amount: z.number().optional(),
   currency: z.string().optional(),
   description: z.string().optional(),
-  cancelation_reason: z.string().optional(),
+  cancellation_reason: z.string().optional(),
   payment_method: z.string().optional(),
   amount_received: z.number().optional(),
   transaction_id: z.string().optional(),
@@ -19,4 +19,8 @@ export const updateIntentSchema = z.object({
 
 export const searchIntentSchema = z.object({
   query: z.string().min(1, 'Search query cannot be empty'),
+});
+
+export const cancelIntentSchema = z.object({
+  cancellation_reason: z.string().min(1, 'Cancellation reason cannot be empty'),
 });

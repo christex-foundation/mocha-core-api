@@ -21,7 +21,7 @@ app.notFound((c) => {
 
 app.onError((err, c) => {
   console.error(`${err}`);
-  return c.text('Custom Error Message', 500);
+  return c.json({ success: false, message: err.message }, 500);
 });
 
 export default handle(app);

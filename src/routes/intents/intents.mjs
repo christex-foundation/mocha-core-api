@@ -4,6 +4,7 @@
 import { ZodError } from 'zod';
 import * as intentRepository from '../../repos/intents.mjs';
 import {
+  cancelIntentSchema,
   createIntentSchema,
   searchIntentSchema,
   updateIntentSchema,
@@ -249,7 +250,7 @@ export async function confirmIntent(id) {
  * @returns {Promise<Object>} The cancelled intent
  * @throws {Object} DatabaseError if there's an error with the database operation
  */
-export async function cancelIntent(id) {
+export async function cancelIntent(id, data) {
   try {
     console.log('Fetching intent for cancellation', { id });
     const { data: intent, error: fetchError } = await intentRepository.fetchIntentById(id);
@@ -271,12 +272,14 @@ export async function cancelIntent(id) {
       throw createValidationError(`Intent is not ready to be cancelled. ${validationError}`);
     }
 
-    console.log('Cancelling intent', { id });
-    const data = {
+    const parsedData = cancelIntentSchema.parse(data);
+
+    console.log('Cancelling intent', { id, cancellation_reason: parsedData.cancellation_reason });
+    const cancellationInfo = {
       cancelled_at: new Date(),
-      cancellation_reason: 'User cancelled',
+      cancellation_reason: parsedData.cancellation_reason,
     };
-    const { data: result, error } = await intentRepository.cancelIntent(id, data);
+    const { data: result, error } = await intentRepository.cancelIntent(id, cancellationInfo);
 
     if (error) {
       console.error('Error cancelling intent', { id, error });
