@@ -1,6 +1,6 @@
 # Mocha Wallet API (WIP)
 
-Mocha wallet API is a NodeJS project, built with [Hono][1] that provides a RESTful API to manage wallets and transaction intents.
+Mocha wallet API is a NodeJS project, built with [Hono](https://hono.dev) that provides a RESTful API to manage wallets and transaction intents.
 
 > The codebase is a work-in-progress (WIP) and is still under development.
 
@@ -35,7 +35,8 @@ Mocha wallet API is a NodeJS project, built with [Hono][1] that provides a RESTf
    - Option 2: Create a `.env` file based on `.env.example`
 
 4. Start the development server:
-   ```
+
+   ```sh
    npm run dev
    ```
 
@@ -49,7 +50,7 @@ npm run test
 
 ## Project Structure
 
-```
+```sh
 mocha-wallet-api/
 ├── __tests__/
 ├── api/
