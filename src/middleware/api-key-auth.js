@@ -1,6 +1,6 @@
 //@ts-check
 
-import { verifyAPIKey, updateAPIKeyLastUsed } from '../repos/api-keys.mjs';
+import { verifyAPIKey, updateAPIKeyLastUsed } from '../repos/api-keys.js';
 
 /**
  * Middleware to authenticate requests using an API key.

@@ -3,7 +3,7 @@ import { jest } from '@jest/globals';
 import { object } from 'zod';
 
 // Mock the repository
-jest.unstable_mockModule('../src/repos/intents.mjs', () => ({
+jest.unstable_mockModule('../src/repos/intents.js', () => ({
   createIntent: jest.fn(),
   updateIntent: jest.fn(),
   fetchAllIntents: jest.fn(),
@@ -16,7 +16,7 @@ jest.unstable_mockModule('../src/repos/intents.mjs', () => ({
 }));
 
 // Mock the supabase client
-jest.unstable_mockModule('../src/utils/supabase.mjs', () => ({
+jest.unstable_mockModule('../src/utils/supabase.js', () => ({
   createSupabaseClient: jest.fn(),
 }));
 
@@ -25,8 +25,8 @@ describe('Intents Service', () => {
   let intentRepository;
 
   beforeAll(async () => {
-    intentService = await import('../src/routes/intents/intents.mjs');
-    intentRepository = await import('../src/repos/intents.mjs');
+    intentService = await import('../src/routes/intents/intents.js');
+    intentRepository = await import('../src/repos/intents.js');
   });
 
   beforeEach(() => {

@@ -14,7 +14,7 @@ import {
   Transaction,
   sendAndConfirmTransaction,
 } from '@solana/web3.js';
-import getConnection from './connection.mjs';
+import getConnection from './connection.js';
 
 const connection = getConnection();
 // @ts-ignore

@@ -1,6 +1,6 @@
 //@ts-check
 
-import * as apiKeys from '../../repos/api-keys.mjs';
+import * as apiKeys from '../../repos/api-keys.js';
 import { createValidationError } from '../../utils/errors.js';
 import { generateAPIKey, hashAPIKey } from '../../utils/crypto.js';
 

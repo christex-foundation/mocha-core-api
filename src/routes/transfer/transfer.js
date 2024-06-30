@@ -1,6 +1,6 @@
 //@ts-check
 
-import { transferUSDC } from '../../utils/transfer-spl.mjs';
+import { transferUSDC } from '../../utils/transfer-spl.js';
 
 /**
  * @param {string} fromNumber

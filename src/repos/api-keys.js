@@ -1,6 +1,6 @@
 //@ts-check
 import { hashAPIKey } from '../utils/crypto.js';
-import { createSupabaseClient } from '../utils/supabase.mjs';
+import { createSupabaseClient } from '../utils/supabase.js';
 
 const supabase = createSupabaseClient();
 

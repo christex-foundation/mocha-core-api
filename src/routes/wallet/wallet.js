@@ -1,7 +1,7 @@
 //@ts-check
 
-import getConnection from '../../utils/connection.mjs';
-import { getOrCreateUserTokenAccount } from '../../utils/wallet.mjs';
+import getConnection from '../../utils/connection.js';
+import { getOrCreateUserTokenAccount } from '../../utils/wallet.js';
 import { Connection, Keypair, clusterApiUrl } from '@solana/web3.js';
 
 const MOCHA_KEYPAIR = Keypair.fromSecretKey(

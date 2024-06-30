@@ -1,6 +1,6 @@
 //@ts-check
 // Intents Repository
-import { createSupabaseClient } from '../utils/supabase.mjs';
+import { createSupabaseClient } from '../utils/supabase.js';
 
 const supabase = createSupabaseClient();
 

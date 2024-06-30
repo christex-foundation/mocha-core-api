@@ -2,11 +2,11 @@
   "name": "mocha-wallet",
   "version": "0.0.1",
   "description": "",
-  "main": "./api/index.mjs",
+  "main": "./api/index.js",
   "type": "module",
   "scripts": {
-    "test:spl-transfer": "node scripts/transfer.mjs",
-    "test:create-wallet": "node scripts/wallet.mjs",
+    "test:spl-transfer": "node scripts/transfer.js",
+    "test:create-wallet": "node scripts/wallet.js",
     "start": "NODEJS_HELPERS=0 vercel dev",
     "deploy": "vercel",
     "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest"

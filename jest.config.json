@@ -1,9 +1,9 @@
 {
   "testMatch": [
     "**/__tests__/**/*.[jt]s?(x)",
-    "**/__tests__/**/*.mjs",
+    "**/__tests__/**/*.js",
     "**/?(*.)+(spec|test).[jt]s?(x)",
-    "**/?(*.)+(spec|test).mjs"
+    "**/?(*.)+(spec|test).js"
   ],
   "transform": {}
 }

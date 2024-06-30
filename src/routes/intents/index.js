@@ -10,9 +10,9 @@ import {
   cancelIntent,
   searchIntents,
   deleteIntent,
-} from './intents.mjs';
-import { errorHandler } from '../../middleware/error-handler.mjs';
-import { apiKeyAuth } from '../../middleware/api-key-auth.mjs';
+} from './intents.js';
+import { errorHandler } from '../../middleware/error-handler.js';
+import { apiKeyAuth } from '../../middleware/api-key-auth.js';
 
 const app = new Hono();
 app.use('/*', apiKeyAuth);

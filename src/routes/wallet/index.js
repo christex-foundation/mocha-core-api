@@ -1,7 +1,7 @@
 //@ts-check
 import { Hono } from 'hono';
-import { fetchWalletBalance } from './wallet.mjs';
-import { apiKeyAuth } from '../../middleware/api-key-auth.mjs';
+import { fetchWalletBalance } from './wallet.js';
+import { apiKeyAuth } from '../../middleware/api-key-auth.js';
 
 const app = new Hono();
 app.use('/*', apiKeyAuth);

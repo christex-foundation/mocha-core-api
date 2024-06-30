@@ -1,7 +1,7 @@
 //@ts-check
 import { Hono } from 'hono';
-import { transfer } from './transfer.mjs';
-import { apiKeyAuth } from '../../middleware/api-key-auth.mjs';
+import { transfer } from './transfer.js';
+import { apiKeyAuth } from '../../middleware/api-key-auth.js';
 
 const app = new Hono();
 app.use('/*', apiKeyAuth);

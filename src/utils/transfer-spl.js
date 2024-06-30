@@ -1,9 +1,9 @@
 //@ts-check
-import { getOrCreateUserTokenAccount } from './wallet.mjs';
+import { getOrCreateUserTokenAccount } from './wallet.js';
 import { transfer } from '@solana/spl-token';
 import { Keypair } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
-import getConnection from './connection.mjs';
+import getConnection from './connection.js';
 
 const connection = getConnection();
 const MOCHA_KEYPAIR = Keypair.fromSecretKey(

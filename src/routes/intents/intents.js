@@ -2,13 +2,13 @@
 
 // Intents Service
 import { ZodError } from 'zod';
-import * as intentRepository from '../../repos/intents.mjs';
+import * as intentRepository from '../../repos/intents.js';
 import {
   cancelIntentSchema,
   createIntentSchema,
   searchIntentSchema,
   updateIntentSchema,
-} from '../../schemas/intent.mjs';
+} from '../../schemas/intent.js';
 import {
   createDatabaseError,
   createNotFoundError,
