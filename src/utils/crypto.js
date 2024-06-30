@@ -6,7 +6,7 @@ import crypto from 'crypto';
  * @param {string} apiKey - The API key to hash.
  * @returns {string} The hashed API key.
  */
-export function hashApiKey(apiKey) {
+export function hashAPIKey(apiKey) {
   // @ts-ignore
   return crypto.createHmac('sha256', process.env.API_KEY_SALT).update(apiKey).digest('hex');
 }

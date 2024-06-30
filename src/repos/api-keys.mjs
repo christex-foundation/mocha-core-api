@@ -1,5 +1,5 @@
 //@ts-check
-import { hashApiKey } from '../utils/crypto';
+import { hashAPIKey } from '../utils/crypto';
 import { createSupabaseClient } from '../utils/supabase.mjs';
 
 const supabase = createSupabaseClient();
@@ -23,7 +23,7 @@ export async function insertAPIKey(apiKeyData) {
  * @returns {Promise<Object|null>} The API key data if valid, null otherwise.
  */
 export async function verifyAPIKey(apiKey) {
-  const keyHash = hashApiKey(apiKey);
+  const keyHash = hashAPIKey(apiKey);
 
   // Check if the API key exists, is active, and not expired
   const { data, error } = await supabase
