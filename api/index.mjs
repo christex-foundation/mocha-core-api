@@ -5,6 +5,7 @@ import transfer from '../src/routes/transfer/index.mjs';
 import convert from '../src/routes/convert/index.mjs';
 import request from '../src/routes/request/index.mjs';
 import intents from '../src/routes/intents/index.mjs';
+import apiKeys from '../src/routes/admin/index.mjs';
 import { handle } from '@hono/node-server/vercel';
 
 const app = new Hono().basePath('/api');
@@ -14,6 +15,7 @@ app.route('/v1/transfer', transfer);
 app.route('/v1/convert', convert);
 app.route('/v1/request', request);
 app.route('/v1/intents', intents);
+app.route('/v1/admin/api-keys', apiKeys);
 
 app.notFound((c) => {
   return c.text('Custom 404 Message', 404);

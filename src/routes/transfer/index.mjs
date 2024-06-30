@@ -1,8 +1,10 @@
 //@ts-check
 import { Hono } from 'hono';
 import { transfer } from './transfer.mjs';
+import { apiKeyAuth } from '../../middleware/api-key-auth.mjs';
 
 const app = new Hono();
+app.use('/*', apiKeyAuth);
 
 app.get('/', (c) => c.json('Hello Transfer!'));
 app.post('/', async (c) => {

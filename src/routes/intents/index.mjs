@@ -12,8 +12,10 @@ import {
   deleteIntent,
 } from './intents.mjs';
 import { errorHandler } from '../../middleware/error-handler.mjs';
+import { apiKeyAuth } from '../../middleware/api-key-auth.mjs';
 
 const app = new Hono();
+app.use('/*', apiKeyAuth);
 app.onError(errorHandler);
 
 //create intent
