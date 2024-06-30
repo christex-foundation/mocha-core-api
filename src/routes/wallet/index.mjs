@@ -1,8 +1,10 @@
 //@ts-check
 import { Hono } from 'hono';
 import { fetchWalletBalance } from './wallet.mjs';
+import { apiKeyAuth } from '../../middleware/api-key-auth.mjs';
 
 const app = new Hono();
+app.use('/*', apiKeyAuth);
 
 app.get('/:phone_number', async (c) => {
   const { phone_number: phoneNumber } = c.req.param();
