@@ -6,7 +6,7 @@ import { verifyAPIKey, updateAPIKeyLastUsed } from '../repos/api-keys.js';
  * Middleware to authenticate requests using an API key.
  */
 export async function apiKeyAuth(c, next) {
-  const apiKey = c.req.header('X-API-Key');
+  const apiKey = c.req.header('X-API-Key') || c.req.query('api_key');
 
   if (!apiKey) {
     console.error('API key is required');
