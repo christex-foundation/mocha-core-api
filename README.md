@@ -1,6 +1,6 @@
-# Mocha Wallet API (WIP)
+# Mocha Core API (WIP)
 
-Mocha wallet API is a NodeJS project, built with [Hono](https://hono.dev) that provides a RESTful API to manage wallets and transaction intents.
+Mocha core API is a NodeJS project, built with [Hono](https://hono.dev) that provides a RESTful API to manage wallets and transaction intents.
 
 > The codebase is a work-in-progress (WIP) and is still under development.
 
@@ -14,8 +14,8 @@ Mocha wallet API is a NodeJS project, built with [Hono](https://hono.dev) that p
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/christex-foundation/mocha-whatsapp-wallet.git
-   cd mocha-wallet-api
+   git clone https://github.com/christex-foundation/mocha-core-api.git
+   cd mocha-core-api
    ```
 
 2. Install dependencies:
