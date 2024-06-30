@@ -1,5 +1,5 @@
 //@ts-check
-import { hashAPIKey } from '../utils/crypto';
+import { hashAPIKey } from '../utils/crypto.js';
 import { createSupabaseClient } from '../utils/supabase.mjs';
 
 const supabase = createSupabaseClient();

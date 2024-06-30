@@ -2,7 +2,7 @@
 
 import { Hono } from 'hono';
 import * as apiKeysService from './api-keys.mjs';
-import { adminAuth } from '../../middleware/admin-auth';
+import { adminAuth } from '../../middleware/admin-auth.js';
 
 const app = new Hono();
 app.use('/*', adminAuth);
