@@ -8,6 +8,12 @@ import intents from '../src/routes/intents/index.js';
 import apiKeys from '../src/routes/admin/index.js';
 import { handle } from '@hono/node-server/vercel';
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 const app = new Hono().basePath('/api');
 
 app.route('/v1/wallet', wallet);
