@@ -2,6 +2,7 @@
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import {
+  Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
   SystemProgram,
@@ -50,3 +51,9 @@ export function createAccountWithSeed(basePubKey, seed, newAccountPubkey) {
 export async function deriveAddress(owner, phoneNumber) {
   return PublicKey.createWithSeed(owner, phoneNumber, TOKEN_PROGRAM_ID);
 }
+
+// Mocha keypair
+export const MOCHA_KEYPAIR = Keypair.fromSecretKey(
+  // @ts-ignore
+  Uint8Array.from(JSON.parse(process.env.MOCHA_SECRET_KEY)),
+);

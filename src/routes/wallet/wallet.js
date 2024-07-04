@@ -1,14 +1,8 @@
 //@ts-check
 
 import * as walletRepository from '../../repos/wallets.js';
-import { Keypair } from '@solana/web3.js';
 import { createNotFoundError } from '../../utils/errors.js';
-import { deriveAddress } from '../../utils/solana.js';
-
-export const MOCHA_KEYPAIR = Keypair.fromSecretKey(
-  // @ts-ignore
-  Uint8Array.from(JSON.parse(process.env.MOCHA_SECRET_KEY)),
-);
+import { deriveAddress, MOCHA_KEYPAIR } from '../../utils/solana.js';
 
 /**
  * @description Function to fetch the wallet balance
