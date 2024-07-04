@@ -1,11 +1,11 @@
 //@ts-check
 
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import * as walletRepository from '../../repos/wallets.js';
-import { Keypair, PublicKey } from '@solana/web3.js';
+import { Keypair } from '@solana/web3.js';
 import { createNotFoundError } from '../../utils/errors.js';
+import { deriveAddress } from '../../utils/solana.js';
 
-const MOCHA_KEYPAIR = Keypair.fromSecretKey(
+export const MOCHA_KEYPAIR = Keypair.fromSecretKey(
   // @ts-ignore
   Uint8Array.from(JSON.parse(process.env.MOCHA_SECRET_KEY)),
 );
@@ -15,7 +15,7 @@ const MOCHA_KEYPAIR = Keypair.fromSecretKey(
  * @param {string} phoneNumber
  */
 export async function getOrCreateUserTokenAccount(phoneNumber) {
-  const address = await deriveAddress(phoneNumber);
+  const address = await deriveAddress(MOCHA_KEYPAIR.publicKey, phoneNumber);
 
   try {
     const account = await walletRepository.getUserTokenAccount(address);
@@ -35,7 +35,7 @@ export async function getOrCreateUserTokenAccount(phoneNumber) {
  * @param {string} phoneNumber
  */
 export async function fetchWalletBalance(phoneNumber) {
-  const addressPk = await deriveAddress(phoneNumber);
+  const addressPk = await deriveAddress(MOCHA_KEYPAIR.publicKey, phoneNumber);
 
   try {
     const balance = await walletRepository.getTokenAccountBalance(addressPk);
@@ -44,12 +44,4 @@ export async function fetchWalletBalance(phoneNumber) {
     console.error('Error fething balance', { error, phoneNumber, address: addressPk.toBase58() });
     throw createNotFoundError('Wallet not found');
   }
-}
-
-/**
- * @description Function to derive the wallet address from the phone number
- * @param {string} phoneNumber
- */
-async function deriveAddress(phoneNumber) {
-  return PublicKey.createWithSeed(MOCHA_KEYPAIR.publicKey, phoneNumber, TOKEN_PROGRAM_ID);
 }

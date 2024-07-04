@@ -42,3 +42,11 @@ export function createAccountWithSeed(basePubKey, seed, newAccountPubkey) {
 
   return ix;
 }
+/**
+ * @description Function to derive the wallet address from the phone number
+ * @param {PublicKey} owner
+ * @param {string} phoneNumber
+ */
+export async function deriveAddress(owner, phoneNumber) {
+  return PublicKey.createWithSeed(owner, phoneNumber, TOKEN_PROGRAM_ID);
+}
