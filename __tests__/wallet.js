@@ -3,7 +3,6 @@ import { jest } from '@jest/globals';
 
 // Mock the repository
 jest.unstable_mockModule('../src/repos/wallets.js', () => ({
-  getOrCreateUserTokenAccount: jest.fn(),
   getTokenAccountBalance: jest.fn(),
 }));
 
