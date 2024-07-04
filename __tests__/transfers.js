@@ -28,7 +28,7 @@ describe('Transfer Service', () => {
   let solanaUtils;
 
   beforeAll(async () => {
-    transferService = await import('../src/routes/transfer/transfer.js');
+    transferService = await import('../src/routes/intents/transfer.js');
     transferRepo = await import('../src/repos/transfer.js');
     solanaUtils = await import('../src/utils/solana.js');
   });
@@ -53,9 +53,15 @@ describe('Transfer Service', () => {
       transferRepo.getUserTokenAccount.mockResolvedValueOnce({ address: mockToAddress });
       transferRepo.transferUSDC.mockResolvedValue(mockTxId);
 
-      const result = await transferService.transfer(fromNumber, toNumber, amount);
+      const result = await transferService.transfer({ fromNumber, toNumber, amount });
 
-      expect(result).toBe(mockTxId);
+      expect(result).toStrictEqual({
+        fromNumber,
+        toNumber,
+        amount,
+        transactionId: mockTxId,
+        message: 'Transfer successful',
+      });
       expect(transferRepo.transferUSDC).toHaveBeenCalledWith(
         solanaUtils.MOCHA_KEYPAIR,
         mockFromAddress,
@@ -79,9 +85,15 @@ describe('Transfer Service', () => {
       transferRepo.createUserTokenAccount.mockResolvedValue({ address: mockToAddress });
       transferRepo.transferUSDC.mockResolvedValue(mockTxId);
 
-      const result = await transferService.transfer(fromNumber, toNumber, amount);
+      const result = await transferService.transfer({ fromNumber, toNumber, amount });
 
-      expect(result).toBe(mockTxId);
+      expect(result).toStrictEqual({
+        fromNumber,
+        toNumber,
+        amount,
+        transactionId: mockTxId,
+        message: 'Transfer successful',
+      });
       expect(transferRepo.createUserTokenAccount).toHaveBeenCalledWith(
         solanaUtils.MOCHA_KEYPAIR,
         mockToAddress,
@@ -102,7 +114,7 @@ describe('Transfer Service', () => {
       transferRepo.getUserTokenAccount.mockResolvedValue({ address: mockFromAddress });
       transferRepo.transferUSDC.mockRejectedValue(new Error('Error transferring USDC'));
 
-      await expect(transferService.transfer(fromNumber, toNumber, amount)).rejects.toThrow(
+      await expect(transferService.transfer({ fromNumber, toNumber, amount })).rejects.toThrow(
         'Error transferring USDC',
       );
     });

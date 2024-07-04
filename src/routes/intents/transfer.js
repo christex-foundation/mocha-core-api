@@ -3,38 +3,49 @@ import BigNumber from 'bignumber.js';
 import { createUserTokenAccount, getUserTokenAccount, transferUSDC } from '../../repos/transfer.js';
 import { MOCHA_KEYPAIR, deriveAddress } from '../../utils/solana.js';
 import { createOnChainError } from '../../utils/errors.js';
+import { createTransferSchema } from '../../schemas/transfer.js';
 
 /**
- * @param {string} fromNumber
- * @param {string} toNumber
- * @param {number} amount
- * @returns {Promise<string>}
+ * @description Function to transfer USDC tokens
+ * @param {Object} body
+ * @param {string} body.fromNumber
+ * @param {string} body.toNumber
+ * @param {number} body.amount
  */
-export async function transfer(fromNumber, toNumber, amount) {
-  // run validation
-  // TODO: validate numbers
-  // https://twilio.com/docs/lookup/quickstart
-  //https://www.twilio.com/docs/glossary/what-e164
-  console.log(`Transferrring USDC`, amount);
-
-  const fromWhatsappUserAccount = await getOrCreateUserTokenAccount(fromNumber);
-  const toWhatsappUserAccount = await getOrCreateUserTokenAccount(toNumber);
-
-  // fix amount
-  let parsedAmount = new BigNumber(amount).multipliedBy(10 ** 6).toNumber();
-
-  // call transfer
+export async function transfer(data) {
   try {
-    const txSig = await transferUSDC(
+    const { fromNumber, toNumber, amount } = createTransferSchema.parse(data);
+    // TODO: validate numbers
+    // https://twilio.com/docs/lookup/quickstart
+    //https://www.twilio.com/docs/glossary/what-e164
+
+    const fromWhatsappUserAccount = await getOrCreateUserTokenAccount(fromNumber);
+    const toWhatsappUserAccount = await getOrCreateUserTokenAccount(toNumber);
+
+    // fix amount
+    let parsedAmount = new BigNumber(amount).multipliedBy(10 ** 6).toNumber();
+
+    const transactionId = await transferUSDC(
       MOCHA_KEYPAIR,
       fromWhatsappUserAccount,
       toWhatsappUserAccount,
       parsedAmount,
     );
 
-    return txSig;
+    return {
+      message: 'Transfer successful',
+      fromNumber,
+      toNumber,
+      amount,
+      transactionId,
+    };
   } catch (error) {
-    console.error('Error transferring USDC', { fromNumber, toNumber, amount, error });
+    console.error('Error transferring USDC', {
+      fromNumber: data.fromNumber,
+      toNumber: data.toNumber,
+      amount: data.amount,
+      error,
+    });
     throw createOnChainError('Error transferring USDC');
   }
 }

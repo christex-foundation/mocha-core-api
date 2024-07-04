@@ -1,33 +1,18 @@
 //@ts-check
 import { Hono } from 'hono';
-import { transfer } from './transfer.js';
+import { transfer } from '../intents/transfer.js';
 import { apiKeyAuth } from '../../middleware/api-key-auth.js';
+import { errorHandler } from '../../middleware/error-handler.js';
 
 const app = new Hono();
 app.use('/*', apiKeyAuth);
+app.onError(errorHandler);
 
 app.post('/', async (c) => {
-  const { fromNumber, toNumber, amount } = await c.req.raw.json().catch(() => ({}));
-  if (!fromNumber || !toNumber || !amount) {
-    return c.json(
-      {
-        message: 'Invalid request; missing `fromNumber`, `toNumber`, or `amount`',
-      },
-      400,
-    );
-  }
+  const body = await c.req.raw.json().catch(() => ({}));
 
-  const transactionId = await transfer(fromNumber, toNumber, Number(amount));
-  return c.json(
-    {
-      message: 'Transfer successful',
-      fromNumber,
-      toNumber,
-      amount,
-      transactionId,
-    },
-    200,
-  );
+  const data = await transfer(body);
+  return c.json(data, 200);
 });
 
 export default app;
