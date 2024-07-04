@@ -6,7 +6,6 @@ import { apiKeyAuth } from '../../middleware/api-key-auth.js';
 const app = new Hono();
 app.use('/*', apiKeyAuth);
 
-app.get('/', (c) => c.json('Hello Transfer!'));
 app.post('/', async (c) => {
   const { fromNumber, toNumber, amount } = await c.req.raw.json().catch(() => ({}));
   if (!fromNumber || !toNumber || !amount) {
