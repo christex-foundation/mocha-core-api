@@ -2,6 +2,7 @@
 import BigNumber from 'bignumber.js';
 import { createUserTokenAccount, getUserTokenAccount, transferUSDC } from '../../repos/transfer.js';
 import { MOCHA_KEYPAIR, deriveAddress } from '../../utils/solana.js';
+import { createOnChainError } from '../../utils/errors.js';
 
 /**
  * @param {string} fromNumber
@@ -23,7 +24,19 @@ export async function transfer(fromNumber, toNumber, amount) {
   let parsedAmount = new BigNumber(amount).multipliedBy(10 ** 6).toNumber();
 
   // call transfer
-  return transferUSDC(MOCHA_KEYPAIR, fromWhatsappUserAccount, toWhatsappUserAccount, parsedAmount);
+  try {
+    const txSig = await transferUSDC(
+      MOCHA_KEYPAIR,
+      fromWhatsappUserAccount,
+      toWhatsappUserAccount,
+      parsedAmount,
+    );
+
+    return txSig;
+  } catch (error) {
+    console.error('Error transferring USDC', { fromNumber, toNumber, amount, error });
+    throw createOnChainError('Error transferring USDC');
+  }
 }
 
 /**

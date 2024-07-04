@@ -9,6 +9,7 @@
     "test:create-wallet": "node scripts/wallet.js",
     "test:wallet": "npm run test -- --testPathPattern=__tests__/wallet.js",
     "test:intents": "npm run test -- --testPathPattern=__tests__/intents.js",
+    "test:transfers": "npm run test -- --testPathPattern=__tests__/transfers.js",
     "start": "NODEJS_HELPERS=0 vercel dev",
     "deploy": "vercel",
     "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest"
