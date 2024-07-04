@@ -53,15 +53,13 @@ describe('Transfer Service', () => {
       transferRepo.getUserTokenAccount.mockResolvedValueOnce({ address: mockToAddress });
       transferRepo.transferUSDC.mockResolvedValue(mockTxId);
 
-      const result = await transferService.transfer({ fromNumber, toNumber, amount });
-
-      expect(result).toStrictEqual({
-        fromNumber,
-        toNumber,
+      const result = await transferService.transfer({
+        from_number: fromNumber,
+        to_number: toNumber,
         amount,
-        transactionId: mockTxId,
-        message: 'Transfer successful',
       });
+
+      expect(result).toBe(mockTxId);
       expect(transferRepo.transferUSDC).toHaveBeenCalledWith(
         solanaUtils.MOCHA_KEYPAIR,
         mockFromAddress,
@@ -85,15 +83,13 @@ describe('Transfer Service', () => {
       transferRepo.createUserTokenAccount.mockResolvedValue({ address: mockToAddress });
       transferRepo.transferUSDC.mockResolvedValue(mockTxId);
 
-      const result = await transferService.transfer({ fromNumber, toNumber, amount });
-
-      expect(result).toStrictEqual({
-        fromNumber,
-        toNumber,
+      const result = await transferService.transfer({
+        from_number: fromNumber,
+        to_number: toNumber,
         amount,
-        transactionId: mockTxId,
-        message: 'Transfer successful',
       });
+
+      expect(result).toBe(mockTxId);
       expect(transferRepo.createUserTokenAccount).toHaveBeenCalledWith(
         solanaUtils.MOCHA_KEYPAIR,
         mockToAddress,
@@ -114,9 +110,9 @@ describe('Transfer Service', () => {
       transferRepo.getUserTokenAccount.mockResolvedValue({ address: mockFromAddress });
       transferRepo.transferUSDC.mockRejectedValue(new Error('Error transferring USDC'));
 
-      await expect(transferService.transfer({ fromNumber, toNumber, amount })).rejects.toThrow(
-        'Error transferring USDC',
-      );
+      await expect(
+        transferService.transfer({ from_number: fromNumber, to_number: toNumber, amount }),
+      ).rejects.toThrow('Error transferring USDC');
     });
   });
 });

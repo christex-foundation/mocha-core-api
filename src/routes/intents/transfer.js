@@ -14,7 +14,11 @@ import { createTransferSchema } from '../../schemas/transfer.js';
  */
 export async function transfer(data) {
   try {
-    const { fromNumber, toNumber, amount } = createTransferSchema.parse(data);
+    const {
+      from_number: fromNumber,
+      to_number: toNumber,
+      amount,
+    } = createTransferSchema.parse(data);
     // TODO: validate numbers
     // https://twilio.com/docs/lookup/quickstart
     //https://www.twilio.com/docs/glossary/what-e164
@@ -32,17 +36,11 @@ export async function transfer(data) {
       parsedAmount,
     );
 
-    return {
-      message: 'Transfer successful',
-      fromNumber,
-      toNumber,
-      amount,
-      transactionId,
-    };
+    return transactionId;
   } catch (error) {
     console.error('Error transferring USDC', {
-      fromNumber: data.fromNumber,
-      toNumber: data.toNumber,
+      fromNumber: data.from_number,
+      toNumber: data.to_number,
       amount: data.amount,
       error,
     });

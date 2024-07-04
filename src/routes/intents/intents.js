@@ -20,6 +20,12 @@ import {
   validateDeleteIntent,
   validateUpdateIntent,
 } from '../../utils/validation.js';
+import { processTransferIntent } from './processors/transfer-intent.js';
+
+// Intent processors (Strategy pattern)
+const intentProcessors = {
+  transfer_intent: processTransferIntent,
+};
 
 /**
  * Create an intent
@@ -197,41 +203,12 @@ export async function fetchIntentById(id) {
  */
 export async function confirmIntent(id) {
   try {
-    console.log('Fetching intent for confirmation', { id });
-    const { data: fetchedIntent, error: fetchError } = await intentRepository.fetchIntentById(id);
+    await fetchAndValidateIntent(id);
+    const confirmedIntent = await executeConfirmation(id);
+    const processResult = await processConfirmedIntent(confirmedIntent);
+    const updatedIntent = await updateProcessedIntent(id, processResult);
 
-    if (fetchError) {
-      console.error('Error fetching intent:', fetchError);
-      throw createDatabaseError('Failed to fetch intent for confirmation');
-    }
-
-    if (fetchedIntent && fetchedIntent.length === 0) {
-      console.warn('Intent not found for confirmation', { id });
-      throw createNotFoundError(`Intent with id ${id} not found`);
-    }
-
-    // validate fields to confirm intent
-    const validationError = validateConfirmationIntent(fetchedIntent);
-
-    if (validationError) {
-      console.error('Intent validation failed:', validationError);
-      throw createValidationError(`Intent is not ready to be confirmed. ${validationError}`);
-    }
-
-    console.log('Confirming intent', { id });
-    const { data: confirmedData, error } = await intentRepository.confirmIntent(id, {
-      confirmed_at: new Date(),
-    });
-
-    if (error) {
-      console.error('Error confirming intent', { id, error });
-      throw createDatabaseError('Failed to confirm intent');
-    }
-
-    console.log('Intent confirmed successfully', { id });
-
-    const [result] = confirmedData;
-    return result;
+    return updatedIntent;
   } catch (err) {
     if (
       err.name !== 'ValidationError' &&
@@ -363,4 +340,88 @@ export async function deleteIntent(id) {
     }
     throw err;
   }
+}
+
+/**
+ * Fetch and validate an intent for confirmation
+ * @param {string} id - The intent ID
+ */
+async function fetchAndValidateIntent(id) {
+  console.log('Fetching intent for confirmation', { id });
+  const { data: fetchedIntent, error: fetchError } = await intentRepository.fetchIntentById(id);
+
+  if (fetchError) {
+    console.error('Error fetching intent:', fetchError);
+    throw createDatabaseError('Failed to fetch intent for confirmation');
+  }
+
+  if (fetchedIntent && fetchedIntent.length === 0) {
+    console.warn('Intent not found for confirmation', { id });
+    throw createNotFoundError(`Intent with id ${id} not found`);
+  }
+
+  // validate fields to confirm intent
+  const validationError = validateConfirmationIntent(fetchedIntent);
+
+  if (validationError) {
+    console.error('Intent validation failed:', validationError);
+    throw createValidationError(`Intent is not ready to be confirmed. ${validationError}`);
+  }
+}
+
+/**
+ * Confirm the intent
+ * @param {string} id - The intent ID
+ */
+async function executeConfirmation(id) {
+  console.log('Confirming intent', { id });
+  const { data: confirmedData, error } = await intentRepository.confirmIntent(id, {
+    confirmed_at: new Date(),
+  });
+
+  if (error) {
+    console.error('Error confirming intent', { id, error });
+    throw createDatabaseError('Failed to confirm intent');
+  }
+
+  console.log('Intent confirmed successfully', { id });
+
+  const [result] = confirmedData;
+  return result;
+}
+
+/**
+ * Process the confirmed intent
+ * @param {Object} intent - The intent to process
+ *
+ */
+async function processConfirmedIntent(intent) {
+  const processor = intentProcessors[intent.object];
+
+  if (!processor) {
+    console.warn('No processor found for intent', { id: intent.id, object: intent.object });
+    return;
+  }
+
+  return await processor(intent);
+}
+
+/**
+ * Update the processed intent
+ * Uses the intent repository directly to update the intent as we dont need the usual validation
+ * @param {string} id - The intent ID
+ * @param {Object} processResult - The result of processing the intent
+ */
+async function updateProcessedIntent(id, processResult) {
+  const parsedData = updateIntentSchema.parse(processResult);
+
+  console.log('Updating intent', { id, data: parsedData });
+  const { data: updatedData, error } = await intentRepository.updateIntent(id, parsedData);
+
+  if (error) {
+    console.error('Error updating intent', { id, error });
+    throw createDatabaseError('Failed to update intent');
+  }
+
+  return updatedData;
 }

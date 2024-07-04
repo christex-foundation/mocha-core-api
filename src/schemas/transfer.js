@@ -3,8 +3,8 @@ import { z } from 'zod';
 import { parseNumber } from './parse-number';
 
 export const createTransferSchema = z.object({
-  fromNumber: z.string(),
-  toNumber: z.string(),
+  from_number: z.string(),
+  to_number: z.string(),
   amount: z.union([
     z.number(),
     z.string().transform((val, ctx) => {
