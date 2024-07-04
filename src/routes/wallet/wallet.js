@@ -13,8 +13,15 @@ export async function getOrCreateUserTokenAccount(phoneNumber) {
 
   try {
     const account = await walletRepository.getUserTokenAccount(address);
+    console.log('Account found', account.address.toBase58());
+
     return account.address;
   } catch (error) {
+    console.log('Account not found, creating account ...', {
+      phoneNumber,
+      address: address.toBase58(),
+    });
+
     const newAccount = await walletRepository.createUserTokenAccount(
       MOCHA_KEYPAIR,
       address,
