@@ -37,6 +37,7 @@ describe('Intents Service', () => {
     it('should create an intent successfully', async () => {
       const mockData = { from_number: '1234567890', object: 'transfer_intent' };
       const mockResult = { id: 'intent_123', ...mockData };
+
       intentRepository.createIntent.mockResolvedValue({ data: [mockResult], error: null });
 
       const result = await intentService.createIntent(mockData);

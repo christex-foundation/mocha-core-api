@@ -7,6 +7,8 @@
   "scripts": {
     "test:spl-transfer": "node scripts/transfer.js",
     "test:create-wallet": "node scripts/wallet.js",
+    "test:wallet": "npm run test -- --testPathPattern=__tests__/wallet.js",
+    "test:intents": "npm run test -- --testPathPattern=__tests__/intents.js",
     "start": "NODEJS_HELPERS=0 vercel dev",
     "deploy": "vercel",
     "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest"
