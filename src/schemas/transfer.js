@@ -2,6 +2,9 @@
 import { z } from 'zod';
 import { parseNumber } from './parse-number';
 
+/**
+ * Schema for creating a transfer
+ */
 export const createTransferSchema = z.object({
   from_number: z.string(),
   to_number: z.string(),
