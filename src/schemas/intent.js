@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { parseNumber } from './parse-number';
 
 export const createIntentSchema = z.object({
   from_number: z.string(),
@@ -39,16 +40,3 @@ export const searchIntentSchema = z.object({
 export const cancelIntentSchema = z.object({
   cancellation_reason: z.string().min(1, 'Cancellation reason cannot be empty'),
 });
-
-const parseNumber = (val) => {
-  if (typeof val === 'number') return val;
-  if (typeof val !== 'string') return null;
-
-  // Remove commas and trim whitespace
-  const cleaned = val.replace(/,/g, '').trim();
-
-  // Parse the cleaned string
-  const parsed = parseFloat(cleaned);
-
-  return isNaN(parsed) ? null : parsed;
-};

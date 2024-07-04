@@ -61,7 +61,6 @@ app.get('/:id', async (c) => {
 //confirm intent
 app.post('/:id/confirm', async (c) => {
   const id = c.req.param('id');
-
   const data = await confirmIntent(id);
   return c.json(data, 200);
 });

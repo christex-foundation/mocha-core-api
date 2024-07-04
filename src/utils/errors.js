@@ -32,3 +32,14 @@ export function createNotFoundError(message) {
   error.name = 'NotFoundError';
   return error;
 }
+
+/**
+ * Create an on-chain error
+ * @param {string} message - The error message
+ * @returns {Error} An on-chain error object
+ */
+export function createOnChainError(message) {
+  const error = new Error(message);
+  error.name = 'OnChainError';
+  return error;
+}

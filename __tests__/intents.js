@@ -1,6 +1,14 @@
 //@ts-check
 import { jest } from '@jest/globals';
+import { Keypair } from '@solana/web3.js';
 import { object } from 'zod';
+
+// Mock the repository
+jest.unstable_mockModule('../src/repos/transfer.js', () => ({
+  createUserTokenAccount: jest.fn(),
+  getUserTokenAccount: jest.fn(),
+  transferUSDC: jest.fn(),
+}));
 
 // Mock the repository
 jest.unstable_mockModule('../src/repos/intents.js', () => ({
@@ -20,13 +28,36 @@ jest.unstable_mockModule('../src/utils/supabase.js', () => ({
   createSupabaseClient: jest.fn(),
 }));
 
+// Mock the solana utils
+jest.unstable_mockModule('../src/utils/solana.js', () => ({
+  MOCHA_KEYPAIR: Keypair.fromSecretKey(
+    Uint8Array.from([
+      53, 201, 119, 247, 223, 186, 126, 13, 31, 14, 50, 96, 251, 159, 21, 155, 249, 40, 128, 85, 46,
+      156, 6, 64, 17, 17, 74, 37, 56, 80, 226, 206, 100, 99, 69, 231, 207, 185, 17, 82, 139, 87, 28,
+      234, 238, 97, 70, 217, 6, 239, 5, 106, 5, 43, 31, 105, 96, 109, 246, 151, 159, 112, 154, 196,
+    ]),
+  ),
+  deriveAddress: jest.fn(),
+}));
+
 describe('Intents Service', () => {
   let intentService;
   let intentRepository;
+  let transferService;
+  let transferRepo;
+  let solanaUtils;
 
   beforeAll(async () => {
+    process.env.MOCHA_SECRET_KEY = JSON.stringify([
+      53, 201, 119, 247, 223, 186, 126, 13, 31, 14, 50, 96, 251, 159, 21, 155, 249, 40, 128, 85, 46,
+      156, 6, 64, 17, 17, 74, 37, 56, 80, 226, 206, 100, 99, 69, 231, 207, 185, 17, 82, 139, 87, 28,
+      234, 238, 97, 70, 217, 6, 239, 5, 106, 5, 43, 31, 105, 96, 109, 246, 151, 159, 112, 154, 196,
+    ]);
     intentService = await import('../src/routes/intents/intents.js');
     intentRepository = await import('../src/repos/intents.js');
+    transferService = await import('../src/routes/intents/transfer.js');
+    transferRepo = await import('../src/repos/transfer.js');
+    solanaUtils = await import('../src/utils/solana.js');
   });
 
   beforeEach(() => {
@@ -203,17 +234,35 @@ describe('Intents Service', () => {
         currency: 'USD',
         from_number: '1234567890',
         to_number: '0987654321',
+        object: 'transfer_intent',
       };
       const confirmedIntent = {
         ...mockIntent,
         status: 'confirmed',
         confirmed_at: expect.any(Date),
       };
+      const processedIntent = {
+        ...confirmedIntent,
+        transaction_id: 'mocktransactionid',
+        payment_method: 'onchain',
+      };
       intentRepository.fetchIntentById.mockResolvedValue({ data: [mockIntent], error: null });
       intentRepository.confirmIntent.mockResolvedValue({ data: [confirmedIntent], error: null });
+      intentRepository.updateIntent.mockResolvedValue({ data: processedIntent, error: null });
+
+      const mockFromAddress = Keypair.generate().publicKey;
+      const mockToAddress = Keypair.generate().publicKey;
+      const mockTxId = 'mocktransactionid';
+
+      solanaUtils.deriveAddress
+        .mockResolvedValueOnce(mockFromAddress)
+        .mockResolvedValueOnce(mockToAddress);
+      transferRepo.getUserTokenAccount.mockResolvedValueOnce({ address: mockFromAddress });
+      transferRepo.getUserTokenAccount.mockResolvedValueOnce({ address: mockToAddress });
+      transferRepo.transferUSDC.mockResolvedValue(mockTxId);
 
       const result = await intentService.confirmIntent(mockId);
-      expect(result).toEqual(confirmedIntent);
+      expect(result).toEqual(processedIntent);
       expect(intentRepository.confirmIntent).toHaveBeenCalledWith(mockId, expect.any(Object));
     });
 
