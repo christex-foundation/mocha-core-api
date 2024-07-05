@@ -247,7 +247,7 @@ describe('Intents Service', () => {
       };
       intentRepository.fetchIntentById.mockResolvedValue({ data: [mockIntent], error: null });
       intentRepository.confirmIntent.mockResolvedValue({ data: [confirmedIntent], error: null });
-      intentRepository.updateIntent.mockResolvedValue({ data: processedIntent, error: null });
+      intentRepository.updateIntent.mockResolvedValue({ data: [processedIntent], error: null });
 
       const mockFromAddress = Keypair.generate().publicKey;
       const mockToAddress = Keypair.generate().publicKey;
