@@ -206,7 +206,7 @@ export async function confirmIntent(id) {
     await fetchAndValidateIntent(id);
     const confirmedIntent = await executeConfirmation(id);
     const processResult = await processConfirmedIntent(confirmedIntent);
-    const updatedIntent = await updateProcessedIntent(id, processResult);
+    const [updatedIntent] = await updateProcessedIntent(id, processResult);
 
     return updatedIntent;
   } catch (err) {
