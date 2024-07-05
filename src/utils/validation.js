@@ -9,7 +9,7 @@ export function validateConfirmationIntent([intent]) {
   const baseValidation = validateBaseIntent(intent);
   if (baseValidation) return baseValidation;
 
-  const requiredFields = ['amount', 'amount_received', 'currency', 'from_number', 'to_number'];
+  const requiredFields = ['amount', 'currency', 'from_number', 'to_number'];
   const missingFields = requiredFields.filter((field) => !intent[field]);
 
   if (missingFields.length > 0) {
@@ -25,7 +25,11 @@ export function validateConfirmationIntent([intent]) {
  * @returns {string|null} Error message if validation fails, null otherwise
  */
 export function validateCancellationIntent([intent]) {
-  return validateBaseIntent(intent);
+  if (intent.cancelled_at) {
+    return 'Intent object is already cancelled';
+  }
+
+  return null;
 }
 
 /**

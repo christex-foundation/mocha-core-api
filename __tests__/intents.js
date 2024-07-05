@@ -230,10 +230,9 @@ describe('Intents Service', () => {
         id: mockId,
         status: 'pending',
         amount: 1000,
-        amount_received: 1000,
         currency: 'USD',
-        from_number: '1234567890',
-        to_number: '0987654321',
+        from_number: 1234567890,
+        to_number: 987654321,
         object: 'transfer_intent',
       };
       const confirmedIntent = {

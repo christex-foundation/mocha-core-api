@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { parseNumber } from './parse-number';
+import { parseNumber } from './parse-number.js';
 
 export const createIntentSchema = z.object({
   from_number: z.string(),

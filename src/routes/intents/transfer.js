@@ -23,8 +23,8 @@ export async function transfer(data) {
     // https://twilio.com/docs/lookup/quickstart
     //https://www.twilio.com/docs/glossary/what-e164
 
-    const fromWhatsappUserAccount = await getOrCreateUserTokenAccount(fromNumber);
-    const toWhatsappUserAccount = await getOrCreateUserTokenAccount(toNumber);
+    const fromWhatsappUserAccount = await getOrCreateUserTokenAccount(fromNumber.toString());
+    const toWhatsappUserAccount = await getOrCreateUserTokenAccount(toNumber.toString());
 
     // fix amount
     let parsedAmount = new BigNumber(amount).multipliedBy(10 ** 6).toNumber();
