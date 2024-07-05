@@ -78,7 +78,7 @@ mocha-wallet-api/
 
 - [x] Implement intents
 - [x] Improve the stability of the intents route.
-- [ ] Refactor and optimize the experimental code sections.
-- [ ] Implement Wallet-as-a-Service (WaaS) provider
-- [ ] Implement cash-in conversion flow
+- [x] Refactor and optimize the experimental code sections.
 - [ ] Implement cash-out conversion flow
+- [ ] Implement cash-in conversion flow
+- [ ] Implement Wallet-as-a-Service (WaaS) provider
