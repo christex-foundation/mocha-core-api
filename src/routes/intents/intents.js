@@ -6,6 +6,7 @@ import * as intentRepository from '../../repos/intents.js';
 import {
   cancelIntentSchema,
   createIntentSchema,
+  createStripeIntentSchema,
   searchIntentSchema,
   updateIntentSchema,
 } from '../../schemas/intent.js';
@@ -424,4 +425,38 @@ async function updateProcessedIntent(id, processResult) {
   }
 
   return updatedData;
+}
+
+/**
+ * Create an intent
+ */
+export async function createStripeIntent(data) {
+  try {
+    const parsedData = createStripeIntentSchema.parse(data);
+    const intentData = {
+      ...parsedData,
+      client_secret: `client_secret_${parsedData.from_number}`,
+    };
+
+    console.log('Creating new intent', { data: intentData });
+
+    const { data: createdIntentData, error } = await intentRepository.createIntent(intentData);
+
+    if (error) {
+      console.error('Error creating intent', { error });
+      throw createDatabaseError('Failed to create intent');
+    }
+
+    const [result] = createdIntentData;
+
+    console.log('Intent created successfully', { id: result.id });
+    return result;
+  } catch (err) {
+    if (err instanceof ZodError) {
+      console.warn('Validation error in createIntent', { errors: err.errors });
+      throw createValidationError(err.message);
+    }
+    console.error('Unexpected error in createIntent', { error: err });
+    throw err;
+  }
 }
