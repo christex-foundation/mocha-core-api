@@ -78,6 +78,7 @@ describe('Intents Service', () => {
 
     it('should create an intent with all fields successfully', async () => {
       const mockData = {
+        application: 'stripe',
         from_number: '1234567890',
         object: 'cashout_intent',
         amount: 1000,
@@ -91,7 +92,7 @@ describe('Intents Service', () => {
 
       intentRepository.createIntent.mockResolvedValue({ data: [mockResult], error: null });
 
-      const result = await intentService.createIntent(mockData);
+      const result = await intentService.createStripeIntent(mockData);
       expect(result).toEqual(mockResult);
       expect(intentRepository.createIntent).toHaveBeenCalledWith(
         expect.objectContaining({
