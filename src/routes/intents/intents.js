@@ -481,8 +481,8 @@ export async function fetchIntentByTransactionID(transactionId) {
       throw createNotFoundError(`Intent with transaction ID ${transactionId} not found`);
     }
 
-    const [result] = fetchedIntent;
-    return result;
+    const [{ amount, currency, from_number, to_number }] = fetchedIntent;
+    return { amount, currency, from_number, to_number };
   } catch (err) {
     console.error('Unexpected error in fetchIntentByTransactionId', { transactionId, error: err });
     throw err;
