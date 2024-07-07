@@ -10,6 +10,7 @@ import {
   cancelIntent,
   searchIntents,
   deleteIntent,
+  fetchIntentByTransactionID,
 } from './intents.js';
 import { errorHandler } from '../../middleware/error-handler.js';
 import { apiKeyAuth } from '../../middleware/api-key-auth.js';
@@ -88,6 +89,14 @@ app.post('/:id/delete', async (c) => {
 
   await deleteIntent(id);
   return c.json({ message: 'Intent deleted successfully' }, 200);
+});
+
+//fetch intent by transaction id
+app.get('/transaction/:transaction_id', async (c) => {
+  const transaction_id = c.req.param('transaction_id');
+
+  const data = await fetchIntentByTransactionID(transaction_id);
+  return c.json(data, 200);
 });
 
 export default app;

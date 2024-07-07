@@ -17,6 +17,7 @@ jest.unstable_mockModule('../src/repos/intents.js', () => ({
   fetchAllIntents: jest.fn(),
   fetchAllUserIntents: jest.fn(),
   fetchIntentById: jest.fn(),
+  fetchIntentByTransactionID: jest.fn(),
   confirmIntent: jest.fn(),
   cancelIntent: jest.fn(),
   searchIntents: jest.fn(),
@@ -425,6 +426,21 @@ describe('Intents Service', () => {
       intentRepository.deleteIntent.mockResolvedValue({ data: null, error: new Error('DB Error') });
 
       await expect(intentService.deleteIntent(mockId)).rejects.toThrow('Failed to delete intent');
+    });
+  });
+
+  describe('fetchIntentByTransactionID', () => {
+    it('should fetch an intent by transaction ID successfully', async () => {
+      const mockTxId = 'txn_123';
+      const mockIntent = { id: 'intent_123', transaction_id: mockTxId };
+      intentRepository.fetchIntentByTransactionID.mockResolvedValue({
+        data: [mockIntent],
+        error: null,
+      });
+
+      const result = await intentService.fetchIntentByTransactionID(mockTxId);
+      expect(result).toEqual(mockIntent);
+      expect(intentRepository.fetchIntentByTransactionID).toHaveBeenCalledWith(mockTxId);
     });
   });
 });

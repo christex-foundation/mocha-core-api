@@ -460,3 +460,31 @@ export async function createStripeIntent(data) {
     throw err;
   }
 }
+
+/**
+ * Fetch an intent by Transaction ID
+ */
+export async function fetchIntentByTransactionID(transactionId) {
+  try {
+    console.log('Fetching intent by transaction ID', { transactionId });
+
+    const { data: fetchedIntent, error: fetchError } =
+      await intentRepository.fetchIntentByTransactionID(transactionId);
+
+    if (fetchError) {
+      console.error('Error fetching intent:', fetchError);
+      throw createDatabaseError('Failed to fetch intent by transaction ID');
+    }
+
+    if (fetchedIntent && fetchedIntent.length === 0) {
+      console.warn('Intent not found by transaction ID', { transactionId });
+      throw createNotFoundError(`Intent with transaction ID ${transactionId} not found`);
+    }
+
+    const [result] = fetchedIntent;
+    return result;
+  } catch (err) {
+    console.error('Unexpected error in fetchIntentByTransactionId', { transactionId, error: err });
+    throw err;
+  }
+}
