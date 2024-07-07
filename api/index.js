@@ -3,6 +3,7 @@ import { Hono } from 'hono';
 import wallet from '../src/routes/wallet/index.js';
 import intents from '../src/routes/intents/index.js';
 import apiKeys from '../src/routes/admin/index.js';
+import stripe from '../src/routes/webhooks/stripe.js';
 import { handle } from '@hono/node-server/vercel';
 
 export const config = {
@@ -13,8 +14,14 @@ export const config = {
 
 const app = new Hono().basePath('/api');
 
+// Public routes
+app.route('webhooks/stripe', stripe);
+
+// Protected routes
 app.route('/v1/wallet', wallet);
 app.route('/v1/intents', intents);
+
+// Admin routes
 app.route('/v1/admin/api-keys', apiKeys);
 
 app.notFound((c) => {

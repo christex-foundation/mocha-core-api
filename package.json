@@ -12,7 +12,8 @@
     "test:transfers": "npm run test -- --testPathPattern=__tests__/transfers.js",
     "start": "NODEJS_HELPERS=0 vercel dev",
     "deploy": "vercel",
-    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest"
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest",
+    "get:env": "vercel env pull"
   },
   "keywords": [],
   "author": "Colin Ogoo",
@@ -24,6 +25,7 @@
     "@supabase/supabase-js": "^2.43.4",
     "bignumber.js": "^9.1.2",
     "hono": "^4.1.2",
+    "stripe": "^16.2.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -76,6 +76,32 @@ describe('Intents Service', () => {
       expect(intentRepository.createIntent).toHaveBeenCalledWith(expect.objectContaining(mockData));
     });
 
+    it('should create an intent with all fields successfully', async () => {
+      const mockData = {
+        application: 'stripe',
+        from_number: '1234567890',
+        object: 'cashout_intent',
+        amount: 1000,
+        amount_received: 1000,
+        currency: 'USD',
+        payment_method: 'stripe',
+        to_number: '987654321',
+        transaction_id: 'stripe_txn_123',
+      };
+      const mockResult = { id: 'intent_123', ...mockData };
+
+      intentRepository.createIntent.mockResolvedValue({ data: [mockResult], error: null });
+
+      const result = await intentService.createStripeIntent(mockData);
+      expect(result).toEqual(mockResult);
+      expect(intentRepository.createIntent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ...mockData,
+          client_secret: `client_secret_${mockData.from_number}`,
+        }),
+      );
+    });
+
     it('should throw ValidationError for invalid input', async () => {
       const mockData = { from_number: 12345 }; // Invalid: should be a string
       await expect(intentService.createIntent(mockData)).rejects.toThrow();
