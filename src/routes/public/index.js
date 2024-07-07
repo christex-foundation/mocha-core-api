@@ -1,9 +1,11 @@
 //@ts-check
 
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import { fetchIntentByTransactionID } from '../intents/intents.js';
 
 const app = new Hono();
+app.use('/*', cors());
 
 // Public route for fetching limited transaction information
 app.get('/transaction/:transaction_id', async (c) => {
