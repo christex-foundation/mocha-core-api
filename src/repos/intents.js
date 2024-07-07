@@ -42,3 +42,7 @@ export async function searchIntents(query) {
 export async function deleteIntent(id) {
   return await supabase.from('intents').delete().eq('id', id);
 }
+
+export async function fetchIntentByTransactionID(transactionId) {
+  return await supabase.from('intents').select().eq('transaction_id', transactionId);
+}
