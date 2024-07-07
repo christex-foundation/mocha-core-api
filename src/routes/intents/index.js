@@ -91,12 +91,4 @@ app.post('/:id/delete', async (c) => {
   return c.json({ message: 'Intent deleted successfully' }, 200);
 });
 
-//fetch intent by transaction id
-app.get('/transaction/:transaction_id', async (c) => {
-  const transaction_id = c.req.param('transaction_id');
-
-  const data = await fetchIntentByTransactionID(transaction_id);
-  return c.json(data, 200);
-});
-
 export default app;

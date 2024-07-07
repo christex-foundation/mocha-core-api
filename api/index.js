@@ -4,6 +4,7 @@ import wallet from '../src/routes/wallet/index.js';
 import intents from '../src/routes/intents/index.js';
 import apiKeys from '../src/routes/admin/index.js';
 import stripe from '../src/routes/webhooks/stripe.js';
+import publicEndpoints from '../src/routes/public/index.js';
 import { handle } from '@hono/node-server/vercel';
 
 export const config = {
@@ -15,7 +16,8 @@ export const config = {
 const app = new Hono().basePath('/api');
 
 // Public routes
-app.route('webhooks/stripe', stripe);
+app.route('/webhooks/stripe', stripe);
+app.route('/v1/public', publicEndpoints);
 
 // Protected routes
 app.route('/v1/wallet', wallet);

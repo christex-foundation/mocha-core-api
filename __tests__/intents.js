@@ -432,7 +432,13 @@ describe('Intents Service', () => {
   describe('fetchIntentByTransactionID', () => {
     it('should fetch an intent by transaction ID successfully', async () => {
       const mockTxId = 'txn_123';
-      const mockIntent = { id: 'intent_123', transaction_id: mockTxId };
+      const mockIntent = {
+        amount: 5500,
+        currency: 'USD',
+        from_number: 1234567890,
+        to_number: 987654321,
+      };
+
       intentRepository.fetchIntentByTransactionID.mockResolvedValue({
         data: [mockIntent],
         error: null,
