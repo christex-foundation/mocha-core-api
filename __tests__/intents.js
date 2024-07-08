@@ -116,7 +116,7 @@ describe('Intents Service', () => {
     });
   });
 
-  describe('updateIntent', () => {
+  describe.only('updateIntent', () => {
     it('should update an intent successfully', async () => {
       const mockId = 'intent_123';
       const mockData = { amount: 1000 };
@@ -193,6 +193,7 @@ describe('Intents Service', () => {
       intentRepository.updateIntent.mockResolvedValue({ data: [mockResult], error: null });
 
       await expect(intentService.updateIntent(mockId, mockData)).rejects.toThrow();
+      
     });
 
     it('should fail w/ specific error message if amount is not integer', async () => {

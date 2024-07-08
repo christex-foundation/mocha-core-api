@@ -11,7 +11,7 @@ export const updateIntentSchema = z.object({
   to_number: z.string().optional(),
   amount: z
     .union([
-      z.number(),
+      z.number().int(),
       z.string().transform((val, ctx) => {
         const parsed = parseNumber(val);
         if (parsed === null) {
