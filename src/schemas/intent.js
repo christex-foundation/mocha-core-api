@@ -11,7 +11,9 @@ export const updateIntentSchema = z.object({
   to_number: z.string().optional(),
   amount: z
     .union([
-      z.number().int(),
+      z.number().int({
+        message: 'Amount should be an integer',
+      }),
       z.string().transform((val, ctx) => {
         const parsed = parseNumber(val);
         if (parsed === null) {

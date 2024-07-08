@@ -116,7 +116,7 @@ describe('Intents Service', () => {
     });
   });
 
-  describe.only('updateIntent', () => {
+  describe('updateIntent', () => {
     it('should update an intent successfully', async () => {
       const mockId = 'intent_123';
       const mockData = { amount: 1000 };
