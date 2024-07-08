@@ -51,7 +51,7 @@ npm run test
 ## Project Structure
 
 ```sh
-mocha-wallet-api/
+mocha-core-api/
 ├── __tests__/
 ├── api/
 ├── src/
