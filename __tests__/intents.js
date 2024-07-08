@@ -183,6 +183,30 @@ describe('Intents Service', () => {
         'Intent cannot be updated',
       );
     });
+
+    it.each([10.13, '10.13'])('should fail if amount is not integer (%p)', async (amount) => {
+      const mockId = 'intent_123';
+      const mockData = { amount };
+      const mockResult = { id: mockId, ...mockData };
+
+      intentRepository.fetchIntentById.mockResolvedValue({ data: [{ id: mockId }], error: null });
+      intentRepository.updateIntent.mockResolvedValue({ data: [mockResult], error: null });
+
+      await expect(intentService.updateIntent(mockId, mockData)).rejects.toThrow();
+    });
+
+    it('should fail w/ specific error message if amount is not integer', async () => {
+      const mockId = 'intent_123';
+      const mockData = { amount: 10.13 };
+      const mockResult = { id: mockId, ...mockData };
+
+      intentRepository.fetchIntentById.mockResolvedValue({ data: [{ id: mockId }], error: null });
+      intentRepository.updateIntent.mockResolvedValue({ data: [mockResult], error: null });
+
+      await expect(intentService.updateIntent(mockId, mockData)).rejects.toThrow(
+        'Amount should be an integer',
+      );
+    });
   });
 
   describe('fetchAllIntents', () => {

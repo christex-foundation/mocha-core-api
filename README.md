@@ -82,3 +82,4 @@ mocha-core-api/
 - [ ] Implement cash-out conversion flow
 - [ ] Implement cash-in conversion flow
 - [ ] Implement Wallet-as-a-Service (WaaS) provider
+- [ ] Implement check for enum values like payment_method and object (for the types of intent)
