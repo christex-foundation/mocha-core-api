@@ -16,7 +16,7 @@ export const updateIntentSchema = z.object({
       }),
       z.string().transform((val, ctx) => {
         const parsed = parseNumber(val);
-        if (parsed === null) {
+        if (parsed === null || !Number.isInteger(parsed)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: 'Invalid number format',
