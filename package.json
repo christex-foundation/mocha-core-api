@@ -2,13 +2,18 @@
   "name": "mocha-wallet",
   "version": "0.0.1",
   "description": "",
-  "main": "./api/index.mjs",
+  "main": "./api/index.js",
   "type": "module",
   "scripts": {
-    "test:spl-transfer": "node scripts/transfer.mjs",
-    "test:create-wallet": "node scripts/wallet.mjs",
+    "test:spl-transfer": "node scripts/transfer.js",
+    "test:create-wallet": "node scripts/wallet.js",
+    "test:wallet": "npm run test -- --testPathPattern=__tests__/wallet.js",
+    "test:intents": "npm run test -- --testPathPattern=__tests__/intents.js",
+    "test:transfers": "npm run test -- --testPathPattern=__tests__/transfers.js",
     "start": "NODEJS_HELPERS=0 vercel dev",
-    "deploy": "vercel"
+    "deploy": "vercel",
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest",
+    "get:env": "vercel env pull"
   },
   "keywords": [],
   "author": "Colin Ogoo",
@@ -17,10 +22,15 @@
     "@hono/node-server": "^1.9.0",
     "@solana/spl-token": "^0.4.1",
     "@solana/web3.js": "^1.91.1",
+    "@supabase/supabase-js": "^2.43.4",
     "bignumber.js": "^9.1.2",
-    "hono": "^4.1.2"
+    "hono": "^4.1.2",
+    "stripe": "^16.2.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
     "vercel": "^32.7.2"
   }
 }
