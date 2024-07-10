@@ -29,7 +29,7 @@ Mocha core API is a NodeJS project, built with [Hono](https://hono.dev) that pro
    - Option 1: Pull from Vercel
 
      ```sh
-     npx vercel env pull
+     npm run get:env
      ```
 
    - Option 2: Create a `.env` file based on `.env.example`
