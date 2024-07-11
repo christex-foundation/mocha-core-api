@@ -3,14 +3,17 @@
 import { Hono } from 'hono';
 import Stripe from 'stripe';
 import { createStripeIntent } from '../intents/intents.js';
+import { apiKeyAuth } from '../../middleware/api-key-auth.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 const app = new Hono();
+app.use('/*', apiKeyAuth);
 
 app.post('/', async (c) => {
   const sig = c.req.header('stripe-signature');
+  const application = c.get('application');
   let event;
 
   try {
@@ -29,7 +32,7 @@ app.post('/', async (c) => {
         object: 'cashout_intent',
         amount: checkoutSession.amount_total,
         amount_received: checkoutSession.amount_total,
-        application: 'stripe',
+        application,
         currency: checkoutSession.currency,
         payment_method: 'stripe',
         from_number: checkoutSession.customer_details?.phone,

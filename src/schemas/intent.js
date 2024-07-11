@@ -47,7 +47,6 @@ export const createStripeIntentSchema = z.object({
   object: z.literal('cashout_intent'),
   amount: z.number(),
   amount_received: z.number().optional(),
-  application: z.literal('stripe'),
   currency: z.string(),
   payment_method: z.literal('stripe'),
   from_number: z.string(),

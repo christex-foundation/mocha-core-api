@@ -16,12 +16,12 @@ export const config = {
 const app = new Hono().basePath('/api');
 
 // Public routes
-app.route('/webhooks/stripe', stripe);
 app.route('/v1/public', publicEndpoints);
 
 // Protected routes
 app.route('/v1/wallet', wallet);
 app.route('/v1/intents', intents);
+app.route('/webhooks/stripe', stripe);
 
 // Admin routes
 app.route('/v1/admin/api-keys', apiKeys);
