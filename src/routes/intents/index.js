@@ -22,8 +22,9 @@ app.onError(errorHandler);
 //create intent
 app.post('/', async (c) => {
   const body = await c.req.json().catch(() => ({}));
+  const application = c.get('application');
 
-  const data = await createIntent(body);
+  const data = await createIntent(body, application);
   return c.json(data, 201);
 });
 
@@ -39,15 +40,18 @@ app.post('/:id', async (c) => {
 
 // Fetch all intents
 app.get('/', async (c) => {
-  const data = await fetchAllIntents();
+  const application = c.get('application');
+
+  const data = await fetchAllIntents(application);
   return c.json(data, 200);
 });
 
 // Fetch all user intents
 app.get('/user/:from_number', async (c) => {
   const from_number = c.req.param('from_number');
+  const application = c.get('application');
 
-  const data = await fetchAllUserIntents(from_number);
+  const data = await fetchAllUserIntents(from_number, application);
   return c.json(data, 200);
 });
 
@@ -78,8 +82,9 @@ app.post('/:id/cancel', async (c) => {
 //search intent
 app.post('/search', async (c) => {
   const body = await c.req.json().catch(() => ({}));
+  const application = c.get('application');
 
-  const data = await searchIntents(body);
+  const data = await searchIntents(body, application);
   return c.json(data, 200);
 });
 
