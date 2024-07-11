@@ -36,7 +36,7 @@ app.post('/', async (c) => {
         currency: checkoutSession.currency,
         payment_method: 'stripe',
         from_number: checkoutSession.customer_details?.phone,
-        to_number: checkoutSession.custom_fields[0].text?.value,
+        to_number: checkoutSession.custom_fields[0].numeric?.value,
         transaction_id: checkoutSession.id,
       };
 
