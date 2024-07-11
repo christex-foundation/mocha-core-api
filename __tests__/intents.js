@@ -77,18 +77,29 @@ describe('Intents Service', () => {
       expect(intentRepository.createIntent).toHaveBeenCalledWith(expect.objectContaining(mockData));
     });
 
-    it('should create an intent with all fields successfully', async () => {
-      const mockData = {
-        application: 'stripe',
-        from_number: '1234567890',
+    it.each([
+      {
         object: 'cashout_intent',
         amount: 1000,
         amount_received: 1000,
+        application: 'stripe',
         currency: 'USD',
         payment_method: 'stripe',
+        from_number: '1234567890',
         to_number: '987654321',
         transaction_id: 'stripe_txn_123',
-      };
+      },
+      {
+        object: 'cashout_intent',
+        amount: 1000,
+        amount_received: 1000,
+        application: 'stripe',
+        currency: 'USD',
+        payment_method: 'stripe',
+        from_number: '1234567890',
+        transaction_id: 'stripe_txn_123',
+      },
+    ])('should create an intent with all fields successfully', async (mockData) => {
       const mockResult = { id: 'intent_123', ...mockData };
 
       intentRepository.createIntent.mockResolvedValue({ data: [mockResult], error: null });
