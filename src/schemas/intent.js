@@ -51,6 +51,6 @@ export const createStripeIntentSchema = z.object({
   currency: z.string(),
   payment_method: z.literal('stripe'),
   from_number: z.string(),
-  to_number: z.string(),
+  to_number: z.string().optional(),
   transaction_id: z.string(),
 });
