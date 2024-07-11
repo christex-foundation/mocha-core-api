@@ -231,12 +231,16 @@ describe('Intents Service', () => {
   describe('fetchAllUserIntents', () => {
     it('should fetch all user intents successfully', async () => {
       const mockFromNumber = '1234567890';
+      const mockApplicationID = 'app_123';
       const mockIntents = [{ id: 'intent_1', from_number: mockFromNumber }];
       intentRepository.fetchAllUserIntents.mockResolvedValue({ data: mockIntents, error: null });
 
-      const result = await intentService.fetchAllUserIntents(mockFromNumber);
+      const result = await intentService.fetchAllUserIntents(mockFromNumber, mockApplicationID);
       expect(result).toEqual(mockIntents);
-      expect(intentRepository.fetchAllUserIntents).toHaveBeenCalledWith(mockFromNumber);
+      expect(intentRepository.fetchAllUserIntents).toHaveBeenCalledWith(
+        mockFromNumber,
+        mockApplicationID,
+      );
     });
 
     it('should throw DatabaseError when repository fails', async () => {
@@ -383,12 +387,13 @@ describe('Intents Service', () => {
   describe('searchIntents', () => {
     it('should search intents successfully', async () => {
       const mockQuery = 'test';
+      const mockApplicationID = 'app_123';
       const mockIntents = [{ id: 'intent_1' }, { id: 'intent_2' }];
       intentRepository.searchIntents.mockResolvedValue({ data: mockIntents, error: null });
 
-      const result = await intentService.searchIntents({ query: mockQuery });
+      const result = await intentService.searchIntents({ query: mockQuery }, mockApplicationID);
       expect(result).toEqual(mockIntents);
-      expect(intentRepository.searchIntents).toHaveBeenCalledWith(mockQuery);
+      expect(intentRepository.searchIntents).toHaveBeenCalledWith(mockQuery, mockApplicationID);
     });
 
     it('should throw ValidationError for invalid query', async () => {

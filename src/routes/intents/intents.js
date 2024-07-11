@@ -32,15 +32,17 @@ const intentProcessors = {
  * Create an intent
  * @param {Object} data - The intent data
  * @param {string} data.from_number - The from number
+ * @param {string} application - The application ID
  * @returns {Promise<Object>} The created intent
  * @throws {Object} ValidationError if the input is invalid
  * @throws {Object} DatabaseError if there's an error with the database operation
  */
-export async function createIntent(data) {
+export async function createIntent(data, application) {
   try {
     const parsedData = createIntentSchema.parse(data);
     const intentData = {
       ...parsedData,
+      application,
       client_secret: `client_secret_${parsedData.from_number}`,
     };
 
@@ -124,13 +126,14 @@ export async function updateIntent(id, data) {
 
 /**
  * Fetch all intents
+ * @param {string} application - The application ID
  * @returns {Promise<Array<Object>>} All intents
  * @throws {Object} DatabaseError if there's an error with the database operation
  */
-export async function fetchAllIntents() {
+export async function fetchAllIntents(application) {
   try {
     console.log('Fetching all intents');
-    const { data, error } = await intentRepository.fetchAllIntents();
+    const { data, error } = await intentRepository.fetchAllIntents(application);
 
     if (error) {
       console.error('Error fetching all intents', { error });
@@ -148,13 +151,14 @@ export async function fetchAllIntents() {
 /**
  * Fetch all intents for a user
  * @param {string} from_number - The user's phone number
+ * @param {string} application - The application ID
  * @returns {Promise<Array<Object>>} User's intents
  * @throws {Object} DatabaseError if there's an error with the database operation
  */
-export async function fetchAllUserIntents(from_number) {
+export async function fetchAllUserIntents(from_number, application) {
   try {
     console.log('Fetching user intents', { from_number });
-    const { data, error } = await intentRepository.fetchAllUserIntents(from_number);
+    const { data, error } = await intentRepository.fetchAllUserIntents(from_number, application);
 
     if (error) {
       console.error('Error fetching user intents', { from_number, error });
@@ -274,14 +278,15 @@ export async function cancelIntent(id, data) {
 
 /**
  * @param {object} body
+ * @param {string} application - The application ID
  * @description Search for intents
  */
-export async function searchIntents({ query }) {
+export async function searchIntents({ query }, application) {
   try {
     const validatedData = searchIntentSchema.parse({ query });
     console.log('Searching intents', { query });
 
-    const { data, error } = await intentRepository.searchIntents(validatedData.query);
+    const { data, error } = await intentRepository.searchIntents(validatedData.query, application);
 
     if (error) {
       console.error('Error searching intents', { query, error });
