@@ -109,3 +109,11 @@ export async function updateAPIKeyRateLimit(apiKeyId, rateLimit) {
 
   if (error) throw error;
 }
+
+/**
+ * Set RPC claim
+ * @param {string} application - The application ID
+ */
+export async function setRPCClaim(application) {
+  return await supabase.rpc('set_api_key_claim', { api_key_id: application });
+}
