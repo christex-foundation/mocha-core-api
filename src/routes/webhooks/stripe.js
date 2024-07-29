@@ -36,7 +36,8 @@ app.post('/', async (c) => {
         currency: checkoutSession.currency,
         payment_method: 'stripe',
         from_number: checkoutSession.customer_details?.phone,
-        to_number: checkoutSession.custom_fields[0].numeric?.value,
+        to_number: getCustomField(checkoutSession, 'recipientphonenumber'),
+        description: getCustomField(checkoutSession, 'recipientfullname'),
         transaction_id: checkoutSession.id,
       };
 
@@ -54,3 +55,13 @@ app.post('/', async (c) => {
 });
 
 export default app;
+
+/**
+ * Get a custom field from a Stripe checkout session
+ * @param {Stripe.Checkout.Session} checkoutSession
+ * @param {string} key
+ * @returns {string | null | undefined}
+ */
+function getCustomField(checkoutSession, key) {
+  return checkoutSession.custom_fields.find((field) => field.key === key)?.numeric?.value;
+}
