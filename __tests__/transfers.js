@@ -64,7 +64,10 @@ describe('Transfer Service', () => {
         solanaUtils.MOCHA_KEYPAIR,
         mockFromAddress,
         mockToAddress,
-        new BigNumber(amount).multipliedBy(10 ** 6).toNumber(),
+        new BigNumber(amount)
+          .dividedBy(100)
+          .multipliedBy(10 ** 6)
+          .toNumber(),
       );
     });
 

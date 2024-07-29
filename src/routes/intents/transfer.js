@@ -26,8 +26,8 @@ export async function transfer(data) {
     const fromWhatsappUserAccount = await getOrCreateUserTokenAccount(fromNumber.toString());
     const toWhatsappUserAccount = await getOrCreateUserTokenAccount(toNumber.toString());
 
-    // fix amount
-    let parsedAmount = new BigNumber(amount).multipliedBy(10 ** 6).toNumber();
+    const amountInUSDC = new BigNumber(amount).dividedBy(100);
+    const parsedAmount = amountInUSDC.multipliedBy(10 ** 6).toNumber();
 
     const transactionId = await transferUSDC(
       MOCHA_KEYPAIR,
