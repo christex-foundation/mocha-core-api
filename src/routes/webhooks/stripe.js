@@ -63,5 +63,6 @@ export default app;
  * @returns {string | null | undefined}
  */
 function getCustomField(checkoutSession, key) {
-  return checkoutSession.custom_fields.find((field) => field.key === key)?.numeric?.value;
+  const field = checkoutSession.custom_fields.find((field) => field.key === key);
+  return field?.[field.type]?.value;
 }
