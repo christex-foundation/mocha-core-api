@@ -12,7 +12,7 @@
     "test:transfers": "npm run test -- --testPathPattern=__tests__/transfers.js",
     "start": "NODEJS_HELPERS=0 vercel dev",
     "deploy": "vercel",
-    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest",
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --silent",
     "get:env": "vercel env pull"
   },
   "keywords": [],
