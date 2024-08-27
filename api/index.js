@@ -5,6 +5,7 @@ import intents from '../src/routes/intents/index.js';
 import apiKeys from '../src/routes/admin/index.js';
 import stripe from '../src/routes/webhooks/stripe.js';
 import publicEndpoints from '../src/routes/public/index.js';
+import savings from '../src/routes/savings/index.js';
 import { handle } from '@hono/node-server/vercel';
 
 export const config = {
@@ -22,6 +23,7 @@ app.route('/v1/public', publicEndpoints);
 app.route('/v1/wallet', wallet);
 app.route('/v1/intents', intents);
 app.route('/webhooks/stripe', stripe);
+app.route('/v1/savings', savings);
 
 // Admin routes
 app.route('/v1/admin/api-keys', apiKeys);
