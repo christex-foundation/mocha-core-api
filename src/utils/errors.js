@@ -43,3 +43,14 @@ export function createOnChainError(message) {
   error.name = 'OnChainError';
   return error;
 }
+
+/**
+ * Create a phone validation error
+ * @param {string|number} phoneNumber - The invalid phone number
+ * @returns {Error} A phone validation error object
+ */
+export function createPhoneValidationError(phoneNumber) {
+  const error = new Error(`${phoneNumber} is not a valid phone number.`);
+  error.name = 'PhoneValidationError';
+  return error;
+}
