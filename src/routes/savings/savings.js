@@ -1,9 +1,10 @@
 //@ts-check
+import { PublicKey } from '@solana/web3.js';
 import { fetchAccountDetails, fetchDepositTransaction, makeDeposit } from '../../repos/savings.js';
 import { deriveAddress, MOCHA_KEYPAIR } from '../../utils/solana.js';
 
 export async function fetchSavings(uid) {
-  const walletAddress = await deriveAddress(MOCHA_KEYPAIR.publicKey, uid);
+  const walletAddress = new PublicKey('Aeh1hgFWKG4UMtGeXAM54LiMHcxwmCxGmALykTsi6vy9');
   const accountDetails = await fetchAccountDetails(walletAddress.toBase58());
   return { accountDetails };
 }

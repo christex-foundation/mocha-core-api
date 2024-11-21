@@ -70,6 +70,8 @@ export async function makeDeposit(transaction) {
   console.log('🚀 ~ makeDeposit ~ tx2:', tx.signatures);
   console.log('Sending signed transaction...');
 
+  tx.sign([MOCHA_KEYPAIR]);
+
   const connection = getConnection();
   return await connection.sendTransaction(tx);
 }
