@@ -1,15 +1,15 @@
 //@ts-check
 // Intents Repository
-import { createSupabaseClient } from '../utils/supabase.js';
+import { createSupabaseClient } from "../utils/supabase.js";
 
 const supabase = createSupabaseClient();
 
 export async function createIntent(data) {
-  return await supabase.from('intents').insert(data).select();
+  return await supabase.from("intents").insert(data).select();
 }
 
 export async function updateIntent(id, data) {
-  return await supabase.from('intents').update(data).eq('id', id).select();
+  return await supabase.from("intents").update(data).eq("id", id).select();
 }
 
 /**
@@ -17,7 +17,7 @@ export async function updateIntent(id, data) {
  * @param {string} application - The application ID
  */
 export async function fetchAllIntents(application) {
-  return await supabase.from('intents').select().eq('application', application);
+  return await supabase.from("intents").select().eq("application", application);
 }
 
 /**
@@ -28,14 +28,32 @@ export async function fetchAllIntents(application) {
  */
 export async function fetchAllUserIntents(from_number, application) {
   return await supabase
-    .from('intents')
+    .from("intents")
     .select()
-    .eq('from_number', from_number)
-    .eq('application', application);
+    .eq("from_number", from_number)
+    .eq("application", application);
+}
+
+/**
+ * Fetch last (latest) intent for a specific user
+ * @param {string} from_number - The user's phone number
+ * @param {string} application - The application ID
+ *
+ */
+export async function fetchLastUserIntent(from_number, application) {
+  return await supabase
+    .from("intents")
+    .select()
+    .eq("from_number", from_number)
+    .eq("application", application)
+    // .is("confirmed_at", null)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
 }
 
 export async function fetchIntentById(id) {
-  return await supabase.from('intents').select().eq('id', id);
+  return await supabase.from("intents").select().eq("id", id);
 }
 
 export async function confirmIntent(id, data) {
@@ -53,16 +71,19 @@ export async function cancelIntent(id, data) {
  */
 export async function searchIntents(query, application) {
   return await supabase
-    .from('intents')
+    .from("intents")
     .select()
     .or(`description.ilike.%${query}%,cancellation_reason.ilike.%${query}%`)
-    .eq('application', application);
+    .eq("application", application);
 }
 
 export async function deleteIntent(id) {
-  return await supabase.from('intents').delete().eq('id', id);
+  return await supabase.from("intents").delete().eq("id", id);
 }
 
 export async function fetchIntentByTransactionID(transactionId) {
-  return await supabase.from('intents').select().eq('transaction_id', transactionId);
+  return await supabase
+    .from("intents")
+    .select()
+    .eq("transaction_id", transactionId);
 }
