@@ -36,7 +36,7 @@ export function createAccountWithSeed(basePubKey, seed, newAccountPubkey) {
     basePubkey: basePubKey,
     seed,
     newAccountPubkey,
-    lamports: LAMPORTS_PER_SOL,
+    lamports: LAMPORTS_PER_SOL / 1_000_000,
     space: 165,
     programId: TOKEN_PROGRAM_ID,
   });
