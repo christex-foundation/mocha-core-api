@@ -36,7 +36,7 @@ export function createAccountWithSeed(basePubKey, seed, newAccountPubkey) {
     basePubkey: basePubKey,
     seed,
     newAccountPubkey,
-    lamports: LAMPORTS_PER_SOL / 1_000_000,
+    lamports: 2_039_280, // amount of lamports needed for spl token account with space of 165,
     space: 165,
     programId: TOKEN_PROGRAM_ID,
   });
