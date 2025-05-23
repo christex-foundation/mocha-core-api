@@ -15,7 +15,12 @@ export async function fetchWalletBalance(phoneNumber) {
     const balance = await walletRepository.getTokenAccountBalance(addressPk);
     return balance?.value?.uiAmount?.toFixed(2);
   } catch (error) {
-    console.error('Error fething balance', { error, phoneNumber, address: addressPk.toBase58() });
-    throw createNotFoundError('Wallet not found');
+    console.error('Error fething balance; Token account not found', {
+      error,
+      phoneNumber,
+      address: addressPk.toBase58(),
+    });
+
+    return 0;
   }
 }
