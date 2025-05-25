@@ -4,6 +4,26 @@ import { parseNumber } from './parse-number.js';
 export const createIntentSchema = z.object({
   from_number: z.string(),
   object: z.string(),
+  to_number: z.string().optional(),
+  amount: z
+    .union([
+      z.number().int({
+        message: 'Amount should be an integer',
+      }),
+      z.string().transform((val, ctx) => {
+        const parsed = parseNumber(val);
+        if (parsed === null || !Number.isInteger(parsed)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Invalid number format',
+          });
+          return z.NEVER;
+        }
+        return parsed;
+      }),
+    ])
+    .optional(),
+  currency: z.string().optional(),
 });
 
 export const updateIntentSchema = z.object({
