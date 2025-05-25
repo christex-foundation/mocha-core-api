@@ -196,26 +196,22 @@ export async function fetchAllUserIntents(from_number, application) {
  * Fetch all intents for a user
  * @param {string} from_number - The user's phone number
  * @param {string} application - The application ID
- * @returns {Promise<Array<Object>>} User's intents
+ * @returns {Promise<Object>} User's intents
  * @throws {Object} DatabaseError if there's an error with the database operation
  */
 export async function fetchLastUserIntent(from_number, application) {
 	try {
 		console.log("Fetching last user intent", { from_number });
-		const { data, error } = await intentRepository.fetchLastUserIntent(
+		const data = await intentRepository.fetchLastUserIntent(
 			from_number,
 			application,
 		);
 
-		if (error) {
-			console.error("Error fetching last user intent", { from_number, error });
-			throw createDatabaseError("Failed to fetch user intents");
+		if (!data) {
+			console.error("Error fetching last user intent", { from_number });
+			throw createDatabaseError("Failed to fetch user's latest intent");
 		}
 
-		console.log("Last user intent fetched successfully", {
-			from_number,
-			count: data.length,
-		});
 		return data;
 	} catch (err) {
 		console.error("Unexpected error in fetchLastUserIntents", {
