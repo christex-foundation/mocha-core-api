@@ -1,8 +1,8 @@
 //@ts-check
 
-import * as walletRepository from "../../repos/wallets.js";
-import { createNotFoundError } from "../../utils/errors.js";
-import { deriveAddress, MOCHA_KEYPAIR } from "../../utils/solana.js";
+import * as walletRepository from '../../repos/wallets.js';
+import { createNotFoundError } from '../../utils/errors.js';
+import { deriveAddress, MOCHA_KEYPAIR } from '../../utils/solana.js';
 
 /**
  * @description Function to fetch the wallet balance
@@ -11,18 +11,19 @@ import { deriveAddress, MOCHA_KEYPAIR } from "../../utils/solana.js";
 export async function fetchWalletBalance(phoneNumber) {
 	const addressPk = await deriveAddress(MOCHA_KEYPAIR.publicKey, phoneNumber);
 
-	try {
-		const balance = await walletRepository.getTokenAccountBalance(addressPk);
+  try {
+    const balance = await walletRepository.getTokenAccountBalance(addressPk);
 		return {
 			balance: balance?.value?.uiAmount?.toFixed(2),
-			address: addressPk,
-		};
-	} catch (error) {
-		console.error("Error fething balance", {
-			error,
-			phoneNumber,
 			address: addressPk.toBase58(),
-		});
-		throw createNotFoundError("Wallet not found");
-	}
+		};
+  } catch (error) {
+    console.error('Error fething balance; Token account not found', {
+      error,
+      phoneNumber,
+      address: addressPk.toBase58(),
+    });
+
+    return { balance: "0", address: addressPk.toBase58() };
+  }
 }
