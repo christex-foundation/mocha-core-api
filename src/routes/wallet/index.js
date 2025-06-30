@@ -9,14 +9,14 @@ app.use('/*', apiKeyAuth);
 app.onError(errorHandler);
 
 app.get('/:phone_number', async (c) => {
-  const phoneNumber = c.req.param('phone_number').replace('+', '');
+  const phoneNumber = c.req.param('phone_number');
 
   const balance = await fetchWalletBalance(phoneNumber);
   return c.json({ balance });
 });
 
 app.get('/:phone_number/address', async (c) => {
-  const phoneNumber = c.req.param('phone_number').replace('+', '');
+  const phoneNumber = c.req.param('phone_number');
 
   const address = await fetchWalletAddress(phoneNumber);
   return c.json({ address });

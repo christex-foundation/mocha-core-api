@@ -9,7 +9,8 @@ import { deriveAddress, MOCHA_KEYPAIR } from '../../utils/solana.js';
  * @param {string} phoneNumber
  */
 export async function fetchWalletBalance(phoneNumber) {
-  const addressPk = await deriveAddress(MOCHA_KEYPAIR.publicKey, phoneNumber);
+  const stripped = phoneNumber.replace('+', '');
+  const addressPk = await deriveAddress(MOCHA_KEYPAIR.publicKey, stripped);
 
   try {
     const balance = await walletRepository.getTokenAccountBalance(addressPk);
@@ -17,7 +18,7 @@ export async function fetchWalletBalance(phoneNumber) {
   } catch (error) {
     console.error('Error fething balance; Token account not found', {
       error,
-      phoneNumber,
+      stripped,
       address: addressPk.toBase58(),
     });
 
@@ -30,7 +31,7 @@ export async function fetchWalletBalance(phoneNumber) {
  * @param {string} phoneNumber
  */
 export async function fetchWalletAddress(phoneNumber) {
-  const addressPk = await deriveAddress(MOCHA_KEYPAIR.publicKey, phoneNumber);
+  const addressPk = await deriveAddress(MOCHA_KEYPAIR.publicKey, phoneNumber.replace('+', ''));
 
   return addressPk.toBase58()
 }
